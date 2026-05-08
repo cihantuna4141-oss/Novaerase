@@ -1,72 +1,69 @@
-import React from 'react';
+"use client";
+
+import React, { useState, useEffect } from 'react';
 import ProductCard from './ProductCard';
 import { PenData } from '@/contexts/Types';
+import { Loader2 } from 'lucide-react';
 
-// Function to fetch pens from our API
-async function getPens() {
-  // Use an absolute URL for server-side fetching
-  // In production, you would use process.env.NEXT_PUBLIC_BASE_URL
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
-  
-  const res = await fetch(`${baseUrl}/api/pens`, {
-    cache: 'no-store', // Ensures we always get fresh data
-  });
+const Product = () => {
+  const [pens, setPens] = useState<PenData[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  if (!res.ok) {
-    throw new Error('Failed to fetch pens');
-  }
+  useEffect(() => {
+    const fetchPens = async () => {
+      try {
+        setLoading(true);
+        const res = await fetch('/api/pens');
+        
+        if (!res.ok) throw new Error('Failed to fetch pens');
 
-  const data = await res.json();
+        const result = await res.json();
 
-  // Map the Prisma data (basePrice) to our UI type (price)
-  return data.map((pen: any) => ({
-    id: pen.id,
-    name: pen.name,
-    description: pen.description,
-    price: pen.basePrice, // mapping basePrice from DB to price for UI
-    category: pen.category,
-    images: pen.images,
-  })) as PenData[];
-}
+        if (result.success && Array.isArray(result.data)) {
+          const mappedData: PenData[] = result.data.map((pen: any) => ({
+            id: pen.id,
+            name: pen.name,
+            description: pen.description,
+            basePrice: pen.basePrice,
+            category: pen.category,
+            images: pen.images,
+            variants: pen.variants || [], // FIX: Ensure variants is included
+          }));
+          
+          setPens(mappedData);
+        }
+      } catch (err: any) {
+        setError(err.message || "Something went wrong");
+      } finally {
+        setLoading(false);
+      }
+    };
 
-const Product = async () => {
-  let pens: PenData[] = [];
-  
-  try {
-    pens = await getPens();
-  } catch (error) {
-    return (
-      <div className="py-10 text-center text-red-500">
-        Error loading products. Please try again later.
-      </div>
-    );
-  }
+    fetchPens();
+  }, []);
+
+  if (loading) return (
+    <div className="flex flex-col items-center justify-center py-20 space-y-4">
+      <Loader2 className="w-10 h-10 text-blue-600 animate-spin" />
+      <p className="font-medium text-gray-500">Loading our collection...</p>
+    </div>
+  );
 
   return (
-    <section className="py-12">
-      <div className="container px-4 mx-auto">
-        <div className="flex items-end justify-between mb-10">
-          <div>
-            <h2 className="text-3xl font-bold tracking-tight text-gray-900">
-              Our Premium Collection
-            </h2>
-            <p className="mt-2 text-gray-600">
-              Discover the perfect writing instrument for your style.
-            </p>
-          </div>
-          <span className="text-sm font-medium text-gray-500">
-            Showing {pens.length} products
-          </span>
-        </div>
-
+    <section className="w-full py-12 bg-gray-50">
+      <div className="max-w-6xl px-4 mx-auto">
+        <h2 className="mb-10 text-xl font-bold text-gray-900 md:text-3xl">Our Premium Collection</h2>
+        
         {pens.length === 0 ? (
-          <div className="py-20 text-center">
-            <p className="text-gray-500">No pens found in the collection.</p>
+          <div className="py-20 text-center bg-white border border-dashed rounded-3xl">
+            <p className="text-gray-500">No pens found.</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <div className="grid grid-cols-2 gap-3 md:gap-4 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
             {pens.map((pen) => (
-              <ProductCard key={pen.id} pen={pen} />
+              // FIX: Pass the whole pen object using spread to satisfy PenData requirements
+              <ProductCard key={pen.id} {...pen} />
             ))}
           </div>
         )}
