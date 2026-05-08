@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
-
+import AuthProvider from "@/contexts/AuthProvider";
+import ToastContext from "@/contexts/ToastContexts";
 
 export const metadata: Metadata = {
   title: {
@@ -17,15 +18,14 @@ export const metadata: Metadata = {
     "Furniture Works",
     "Professional Painting",
     "Pop Designs",
-    "Lighting Solutions"
+    "Lighting Solutions",
   ],
 
   metadataBase: new URL("https://yourdomain.com"),
 
   openGraph: {
     title: "Pen Shop –  ",
-    description:
-      "We Paint, We Design, We Light",
+    description: "We Paint, We Design, We Light",
     url: "https://yourdomain.com",
     siteName: "Pen Shop",
     images: [
@@ -41,7 +41,6 @@ export const metadata: Metadata = {
   },
 };
 
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -50,11 +49,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="antialiased selection:bg-[#D4AF37] selection:text-white">
-        
-         
-            {children}
-           
-       
+        <AuthProvider>
+          {children}
+          <ToastContext />
+        </AuthProvider>
       </body>
     </html>
   );
