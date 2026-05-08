@@ -13,3 +13,24 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+// schema.prisma
+model Pen {
+  id          String   @id @default(cuid())
+  name        String
+  description String
+  basePrice   Float
+  category    String   // Ballpoint, Fountain, Gel
+  images      String[] // Array of image URLs
+  variants    Variant[]
+}
+
+model Variant {
+  id        String  @id @default(cuid())
+  penId     String
+  pen       Pen     @relation(fields: [penId], references: [id])
+  inkColor  String  // e.g., "Midnight Blue"
+  tipSize   String  // e.g., "0.5mm"
+  stock     Int
+  price     Float?  // Optional: override base price
+}
