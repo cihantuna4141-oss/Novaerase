@@ -1,7 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import FavoritesSlice from "./FavoritesSlice";
 import CartSlice from "./CartSlice";
-import { ProductsData } from "@/contexts/Types";
+import { PenData } from "@/contexts/Types";
 
 export const store = configureStore({
   reducer: {
@@ -16,11 +16,11 @@ store.subscribe(() => {
   saveFavoritesToLocalStorage(state.favorites.items);
 });
 
-function saveCartToLocalStorage(cart: ProductsData[]) {
+function saveCartToLocalStorage(cart: PenData[]) {
   localStorage.setItem("cart", JSON.stringify(cart));
 }
 
-function saveFavoritesToLocalStorage(favorites: ProductsData[]) {
+function saveFavoritesToLocalStorage(favorites: PenData[]) {
   localStorage.setItem("favorites", JSON.stringify(favorites));
 }
 

@@ -1,10 +1,23 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "./Store";
-import { ProductsData } from "@/contexts/Types";
+import { PenData } from "@/contexts/Types";
 
 interface FavoritesState {
-  items: ProductsData[];
+  items: PenData[];
 }
+
+// Helpers for LocalStorage
+const loadFavoritesFromLocalStorage = (): PenData[] => {
+  if (typeof window === "undefined") return [];
+  const storedFavorites = localStorage.getItem("favorites");
+  return storedFavorites ? JSON.parse(storedFavorites) : [];
+};
+
+const saveFavoritesToLocalStorage = (favorites: PenData[]) => {
+  if (typeof window !== "undefined") {
+    localStorage.setItem("favorites", JSON.stringify(favorites));
+  }
+};
 
 const initialState: FavoritesState = {
   items: loadFavoritesFromLocalStorage(),
@@ -14,29 +27,21 @@ const FavoritesSlice = createSlice({
   name: "favorites",
   initialState,
   reducers: {
-    // =====  Add To Favorite =====
-    addToFavorite: (state, action: PayloadAction<ProductsData>) => {
+    addToFavorite: (state, action: PayloadAction<PenData>) => {
       const newItem = action.payload;
-      const existingItem = state.items.find((item) => item.id === newItem.id);
+      const exists = state.items.some((item) => item.id === newItem.id);
 
-      if (existingItem) {
-        // Item already in favorites, do nothing
-      } else {
-        state.items.push({
-          ...newItem,
-          quantity: 1,
-        });
+      if (!exists) {
+        state.items.push(newItem); // No 'quantity: 1' here to avoid TS error
+        saveFavoritesToLocalStorage(state.items);
       }
-      saveFavoritesToLocalStorage(state.items);
     },
 
-    // ====  Delete Favorite ====
     deleteFavorite: (state, action: PayloadAction<string>) => {
       state.items = state.items.filter((item) => item.id !== action.payload);
       saveFavoritesToLocalStorage(state.items);
     },
 
-    // ==== Clear Favorite ====
     clearFavorites: (state) => {
       state.items = [];
       saveFavoritesToLocalStorage(state.items);
@@ -44,23 +49,6 @@ const FavoritesSlice = createSlice({
   },
 });
 
-// ==== Load Favorites From LocalStorage ====
-function loadFavoritesFromLocalStorage(): ProductsData[] {
-  if (typeof window === "undefined") {
-    return [];
-  }
-
-  const storedFavorites = localStorage.getItem("favorites");
-  return storedFavorites ? JSON.parse(storedFavorites) : [];
-}
-
-// ===== Save Favorites To LocalStorage ====
-function saveFavoritesToLocalStorage(favorites: ProductsData[]) {
-  localStorage.setItem("favorites", JSON.stringify(favorites));
-}
-
 export const FavoriteActions = FavoritesSlice.actions;
-
 export const selectFavoriteItems = (state: RootState) => state.favorites.items;
-
 export default FavoritesSlice.reducer;

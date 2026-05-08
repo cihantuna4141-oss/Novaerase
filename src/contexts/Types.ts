@@ -2,80 +2,29 @@ export interface ToastNotificationProps {
   [key: string]: unknown;
 }
 
-// export interface ProductsData {
-//   id: string;
-//   name: string;
-//   price: number;
-//   description?: string;
-//   image: string;
-//   originalPrice?: number;
-//   discount?: string;
-//   rating?: number;
-//   totalPrice?: number;
-//   quantity?: number;
-//   totalQuantity?: number;
-//   review?: number;
-// }
+export interface Variant {
+  id: string;
+  penId: string;
+  inkColor: string;
+  tipSize: string;
+  stock: number;
+  price: number | string; // Allow price to be a number
+}
 
-export interface ProductsData {
+export interface PenData {
   id: string;
   name: string;
-  price: number;
-  originalPrice?: number;
-  discount?: string;
-  image: string;
-  
-  // New Structured Fields
-  introduction?: string;
-  keyIngredients?: string;
-  benefits?: string;
-  howToUse?: string;
-
-  rating?: number;
-  reviewCount?: number; 
-  reviews?: any[]
-
-  totalPrice?: number;
-  quantity?: number;
-  totalQuantity?: number;
+  description: string;
+  basePrice: number;
+  category: "Ballpoint" | "Fountain" | "Gel" | string; 
+  images: string[];
+  variants: Variant[]; // Array of variants included
 }
 
-export interface OrderItem {
-  id: string;
-  productName: string;
-  productImage: string;
-  quantity: number;
-  totalPrice: number;
-}
+// Type for creating a new Pen (omitting the auto-generated ID)
+export type CreatePenInput = Omit<PenData, 'id' | 'variants'> & {
+  variants?: Omit<Variant, 'id' | 'penId'>[];
+};
 
-export interface Order {
-  id: string;
-  orderNumber: string;
-  orderStatus: "PROCESSING" | "SHIPPED" | "DELIVERED" | "CANCELLED";
-  customerName: string;
-  customerPhone: string;
-  customerEmail: string;
-  totalAmount: number;
-  country?: string;
-  houseAddress?: string;
-  streetName?: string;
-  town?: string;
-  state?: string;
-  zipCode?: string;
-  createdAt: string;
-  items: OrderItem[];
-}
-
-export interface NewsArticle {
-  id: string;
-  slug: string;
-  category: string;
-  title: string;
-  date: string;
-  excerpt: string;
-  content: string;
-  image: string;
-  readTime: string;
-  createdAt?: Date;
-  updatedAt?: Date;
-}
+// Type for updating a Pen (everything is optional except ID)
+export type UpdatePenInput = Partial<CreatePenInput>;

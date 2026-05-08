@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import nodemailer from "nodemailer";
 
 // Simple map for backend usage since we can't use React Context here
