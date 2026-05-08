@@ -1,0 +1,14 @@
+[
+    {
+      "origin": ["http://localhost:3000", "https://perfect-man-hub.vercel.app"],
+      "responseHeader": ["Content-Type", "Authorization"],
+      "method": ["GET", "POST", "OPTIONS"],
+      "maxAgeSeconds": 3600
+    },
+    {
+      "origin": ["http://localhost:3000", "https://perfect-man-hub.vercel.app"],
+      "responseHeader": ["Content-Type"],
+      "method": ["GET"],
+      "maxAgeSeconds": 86400
+    }
+  ]
