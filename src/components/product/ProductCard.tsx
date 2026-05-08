@@ -6,7 +6,6 @@ import Link from "next/link";
 import { Heart, ShoppingCart, CheckCircle2, Info } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "sonner";
-
 import { CartActions } from "@/store/CartSlice";
 import { FavoriteActions } from "@/store/FavoritesSlice";
 import { PenData } from "@/contexts/Types";
