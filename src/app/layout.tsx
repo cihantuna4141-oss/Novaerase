@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import AuthProvider from "@/contexts/AuthProvider";
 import ToastContext from "@/contexts/ToastContexts";
+import { Toaster } from "sonner";
 
 export const metadata: Metadata = {
   title: {
@@ -51,7 +52,7 @@ export default function RootLayout({
       <body className="antialiased selection:bg-[#D4AF37] selection:text-white">
         <AuthProvider>
           {children}
-          <ToastContext />
+          <Toaster position="top-right" richColors closeButton />
         </AuthProvider>
       </body>
     </html>
