@@ -13,11 +13,11 @@ const OrdersList = () => {
   }, []);
 
   return (
-    <div className="grid grid-cols-1 gap-4 p-4 pb-20 md:grid-cols-2 lg:grid-cols-3">
+    <div className="grid grid-cols-1 gap-4 pb-20 md:grid-cols-2 lg:grid-cols-3">
       {orders.map((order: any) => (
         <div
           key={order.id}
-          className="flex flex-col items-center justify-between gap-4 p-4 transition-colors bg-white border shadow-sm rounded-xl border-slate-200/60 hover:border-indigo-200"
+          className="flex flex-col items-start justify-between gap-4 p-4 transition-colors bg-white border shadow-sm rounded-xl border-slate-200/60 hover:border-indigo-200"
         >
           {/* Compact Info */}
           <div className="flex items-center gap-6">
@@ -30,7 +30,7 @@ const OrdersList = () => {
               </span>
             </div>
             <div>
-              <h3 className="text-lg font-black leading-tight text-slate-900">
+              <h3 className="text-lg font-black leading-tight uppercase text-slate-900">
                 {order.customerName}
               </h3>
               <p className="text-xs font-medium text-slate-400">
@@ -42,7 +42,7 @@ const OrdersList = () => {
           {/* Action Button */}
           <button 
             onClick={() => setSelectedOrder(order)}
-            className="flex items-center justify-center gap-2 py-2.5 text-sm font-black transition-all bg-white border-2 px-3 border-slate-900 text-slate-900 rounded-2xl hover:bg-slate-900 hover:text-white shrink-0 active:scale-95"
+            className="flex items-center justify-center gap-2 px-3 py-2 text-sm font-black transition-all bg-white border-2 rounded-lg border-slate-900 text-slate-900 hover:bg-slate-900 hover:text-white shrink-0 active:scale-95"
           >
             Details <ArrowUpRight size={18} />
           </button>
@@ -59,9 +59,9 @@ const OrdersList = () => {
           />
           
           {/* Modal Box */}
-          <div className="relative w-full max-w-2xl bg-white rounded-[2.5rem] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300">
+          <div className="relative w-full max-w-2xl overflow-hidden duration-300 bg-white rounded-lg shadow-2xl animate-in zoom-in-95">
             {/* Header */}
-            <div className="flex items-center justify-between px-8 py-6 border-b border-slate-100 bg-slate-50/50">
+            <div className="flex items-center justify-between px-8 py-4 border-b border-slate-100 bg-slate-50/50">
               <div className="flex items-center gap-3">
                 <div className="flex items-center justify-center w-10 h-10 text-white bg-indigo-600 rounded-xl">
                   <User size={20} />
@@ -137,13 +137,13 @@ const OrdersList = () => {
             </div>
 
             {/* Modal Footer */}
-            <div className="flex gap-3 p-6 border-t bg-slate-50">
-               <button className="flex-1 py-4 text-sm font-black text-white transition bg-indigo-600 shadow-lg rounded-2xl hover:bg-indigo-700 active:scale-95 shadow-indigo-100">
+            <div className="flex gap-3 p-4 border-t bg-slate-50">
+               <button className="flex-1 py-2.5 text-sm font-black text-white transition bg-indigo-600 shadow-lg rounded-2xl hover:bg-indigo-700 active:scale-95 shadow-indigo-100">
                  Mark as Delivered
                </button>
                <button 
                  onClick={() => setSelectedOrder(null)}
-                 className="flex-1 py-4 text-sm font-black transition bg-white border-2 border-slate-200 text-slate-600 rounded-2xl hover:bg-slate-50 active:scale-95"
+                 className="flex-1 py-2.5 text-sm font-black transition bg-white border-2 border-slate-200 text-slate-600 rounded-2xl hover:bg-slate-50 active:scale-95"
                >
                  Close
                </button>
