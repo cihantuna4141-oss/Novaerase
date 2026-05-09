@@ -33,3 +33,26 @@ model Variant {
   stock     Int
   price     Float?  // Optional: override base price
 }
+
+model Order {
+  id              String      @id @default(cuid())
+  customerName    String
+  email           String?
+  phone           String
+  address         String
+  city            String
+  paymentMethod   String      // "card" or "momo"
+  totalAmount     Float
+  status          String      @default("Pending") // Pending, Shipped, Delivered
+  createdAt       DateTime    @default(now())
+  items           OrderItem[]
+}
+
+model OrderItem {
+  id        String @id @default(cuid())
+  orderId   String
+  order     Order  @relation(fields: [orderId], references: [id])
+  penName   String
+  price     Float
+  quantity  Int
+}

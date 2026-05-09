@@ -1,10 +1,11 @@
-import CreatePenForm from '@/components/CreatePenForm'
+import Dashboard from '@/components/admin/Dashboard'
+import CreatePenForm from '@/components/admin/CreatePenForm'
 import React from 'react'
 
 const AdminDashboard = () => {
   return (
     <div>
-        <CreatePenForm />
+        <Dashboard />
     </div>
   )
 }
