@@ -1,24 +1,35 @@
 "use client";
-import React, { useState } from "react";
-import { Upload, Loader2, Image as ImageIcon } from "lucide-react";
-import { toast } from "sonner";
-import Image from "next/image";
 
+import React, { useState } from "react";
+import { Upload, X, Loader2, CheckCircle2 } from "lucide-react";
+import Image from "next/image";
+import { toast } from "sonner";
+const CATEGORIES = ["Fountain", "Ballpoint", "Gel", "Rollerball", "Digital"];
 interface Props {
   onSuccess: () => void;
   onClose: () => void;
 }
 
-export default function CreatePenForm({ onSuccess, onClose }: Props) {
+const CreatePenForm = ({ onSuccess, onClose }: Props) => {
   const [loading, setLoading] = useState(false);
+  const [status, setStatus] = useState<{ type: "success" | "error"; msg: string } | null>(null);
   const [previews, setPreviews] = useState<string[]>([]);
   const [files, setFiles] = useState<File[]>([]);
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  // Remove image from selection
+  const removeImage = (index: number) => {
+    setFiles((prev) => prev.filter((_, i) => i !== index));
+    setPreviews((prev) => prev.filter((_, i) => i !== index));
+  };
+
+   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const selectedFiles = Array.from(e.target.files);
-      setFiles(prev => [...prev, ...selectedFiles]);
-      setPreviews(prev => [...prev, ...selectedFiles.map(f => URL.createObjectURL(f))]);
+      setFiles((prev) => [...prev, ...selectedFiles]);
+      setPreviews((prev) => [
+        ...prev,
+        ...selectedFiles.map((f) => URL.createObjectURL(f)),
+      ]);
     }
   };
 
@@ -26,16 +37,16 @@ export default function CreatePenForm({ onSuccess, onClose }: Props) {
     e.preventDefault();
     setLoading(true);
     const formData = new FormData(e.currentTarget);
-    files.forEach(f => formData.append("images", f));
+    files.forEach((f) => formData.append("images", f));
 
     try {
       const res = await fetch("/api/pens", { method: "POST", body: formData });
       const result = await res.json();
-      
+
       if (result.success) {
         toast.success("Pen Added Successfully");
         onSuccess(); // Refresh the list
-        onClose();   // Close the modal
+        onClose(); // Close the modal
       }
     } catch (err) {
       toast.error("Upload failed");
@@ -45,63 +56,110 @@ export default function CreatePenForm({ onSuccess, onClose }: Props) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-        <div className="space-y-4">
-          <div>
-            <label className="block mb-1 text-xs font-black text-gray-400 uppercase">Pen Name</label>
-            <input name="name" required className="w-full p-3 font-medium border outline-none bg-gray-50 rounded-xl focus:ring-2 focus:ring-blue-500" />
+    <div>
+     
+
+      <form onSubmit={handleSubmit} className="space-y-4">
+        {/* Row 1: Name & Category */}
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          <div className="space-y-2">
+            <label className="text-sm font-semibold">Pen Name</label>
+            <input
+              name="name"
+              required
+              placeholder="e.g. Meisterstück Fountain Pen"
+              className="w-full px-4 py-2 transition border rounded-lg outline-none focus:ring-2 focus:ring-blue-500"
+            />
           </div>
-          <div>
-            <label className="block mb-1 text-xs font-black text-gray-400 uppercase">Category</label>
-            <select name="category" className="w-full p-3 font-medium border outline-none bg-gray-50 rounded-xl">
-              <option>Fountain</option>
-              <option>Ballpoint</option>
-              <option>Rollerball</option>
-              <option>Gel</option>
+          <div className="space-y-2">
+            <label className="text-sm font-semibold">Category</label>
+            <select
+              name="category"
+              className="w-full px-4 py-2.5 bg-white border rounded-lg outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              {CATEGORIES.map((cat) => (
+                <option key={cat} value={cat}>{cat}</option>
+              ))}
             </select>
           </div>
-          <div>
-            <label className="block mb-1 text-xs font-black text-gray-400 uppercase">Price (GH₵)</label>
-            <input name="basePrice" type="number" step="0.01" required className="w-full p-3 font-medium border outline-none bg-gray-50 rounded-xl" />
-          </div>
         </div>
 
-        <div className="space-y-4">
-          <label className="block mb-1 text-xs font-black text-gray-400 uppercase">Product Images</label>
-          <div className="flex flex-wrap gap-2 min-h-[100px] p-2 border-2 border-dashed rounded-2xl items-center justify-center">
-            {previews.map((p, i) => (
-              <div key={i} className="relative w-16 h-16 overflow-hidden border shadow-sm rounded-xl">
-                <Image src={p} alt="" fill className="object-cover" />
+        {/* Row 2: Price */}
+        <div className="space-y-2">
+          <label className="text-sm font-semibold"> Price (GHC)</label>
+          <input
+            name="basePrice"
+            type="number"
+            step="0.01"
+            required
+            placeholder="0.00"
+            className="w-full px-4 py-2 border rounded-lg outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+
+        {/* Row 3: Description */}
+        <div className="space-y-2">
+          <label className="text-sm font-semibold">Description</label>
+          <textarea
+            name="description"
+            rows={4}
+            placeholder="Tell the story behind this pen..."
+            className="w-full px-4 py-2 border rounded-lg outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+
+        {/* Row 4: Image Upload */}
+        <div className="space-y-2">
+          <label className="text-sm font-semibold">Product Images</label>
+          <div className="flex flex-wrap gap-4 mt-2">
+            {previews.map((src, index) => (
+              <div key={src} className="relative w-24 h-24 overflow-hidden border rounded-lg group">
+                <Image src={src} alt="preview" fill className="object-cover" />
+                <button
+                  type="button"
+                  onClick={() => removeImage(index)}
+                  className="absolute p-1 text-white transition bg-red-500 rounded-full opacity-0 top-1 right-1 group-hover:opacity-100"
+                >
+                  <X size={12} />
+                </button>
               </div>
             ))}
-            <label className="flex items-center justify-center w-16 h-16 text-blue-600 transition cursor-pointer rounded-xl bg-blue-50 hover:bg-blue-100">
-              <Upload size={20} />
-              <input type="file" multiple className="hidden" onChange={handleFileChange} />
+            
+            <label className="flex flex-col items-center justify-center w-24 h-24 transition border-2 border-gray-300 border-dashed rounded-lg cursor-pointer hover:border-blue-500 hover:bg-blue-50">
+              <Upload className="w-6 h-6 text-gray-400" />
+              <span className="text-[10px] text-gray-400 mt-1 font-medium">Upload</span>
+              <input type="file" multiple className="hidden" onChange={handleFileChange} accept="image/*" />
             </label>
           </div>
-          <div>
-            <label className="block mb-1 text-xs font-black text-gray-400 uppercase">Description</label>
-            <textarea name="description" className="w-full p-3 text-sm border outline-none bg-gray-50 rounded-xl" rows={3} />
-          </div>
         </div>
-      </div>
 
-      <div className="flex gap-3 pt-4 border-t">
-        <button 
-          type="button" 
-          onClick={onClose} 
-          className="flex-1 px-6 py-4 font-bold text-gray-500 transition rounded-2xl hover:bg-gray-100"
+        {/* Status Messages */}
+        {status && (
+          <div className={`p-4 rounded-lg flex items-center gap-3 ${status.type === 'success' ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'}`}>
+            {status.type === 'success' && <CheckCircle2 size={20} />}
+            <span className="text-sm font-medium">{status.msg}</span>
+            <p>
+            </p>
+          </div>
+        )}
+
+        {/* Submit Button */}
+        <button
+          type="submit"
+          disabled={loading}
+          className="flex items-center justify-center w-full gap-2 py-3 font-bold text-white transition bg-blue-600 hover:bg-blue-700 rounded-xl disabled:bg-gray-400"
         >
-          Cancel
+          {loading ? (
+            <>
+              <Loader2 className="animate-spin" /> Creating...
+            </>
+          ) : (
+            "Create Product"
+          )}
         </button>
-        <button 
-          disabled={loading} 
-          className="flex-[2] bg-gray-900 text-white py-4 rounded-2xl font-black flex items-center justify-center gap-2 hover:bg-blue-600 transition disabled:bg-gray-300 shadow-xl shadow-gray-200"
-        >
-          {loading ? <Loader2 className="animate-spin" /> : "Save Pen Product"}
-        </button>
-      </div>
-    </form>
+      </form>
+    </div>
   );
 }
+
+export default CreatePenForm;
