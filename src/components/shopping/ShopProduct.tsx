@@ -96,32 +96,38 @@ const ShopProduct = () => {
                 <Truck className="text-blue-600" size={20} /> Shipping
                 Information
               </h2>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="col-span-2 space-y-1">
+
+              <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+                <div className="space-y-1">
                   <label className="text-xs font-bold text-gray-500 uppercase">
                     Full Name
                   </label>
                   <input
+                    name="customerName"
                     required
                     className="w-full p-3 border outline-none rounded-xl focus:ring-2 focus:ring-blue-500 bg-gray-50"
                     placeholder="John Doe"
                   />
                 </div>
-                <div className="col-span-2 space-y-1">
+
+                <div className="space-y-1">
                   <label className="text-xs font-bold text-gray-500 uppercase">
-                    Street Address
+                    Phone Number
                   </label>
                   <input
+                    name="phone"
                     required
                     className="w-full p-3 border outline-none rounded-xl focus:ring-2 focus:ring-blue-500 bg-gray-50"
-                    placeholder="123 Independence Ave"
+                    placeholder="024 000 0000"
                   />
                 </div>
+
                 <div className="space-y-1">
                   <label className="text-xs font-bold text-gray-500 uppercase">
                     City
                   </label>
                   <input
+                    name="city"
                     required
                     className="w-full p-3 border outline-none rounded-xl focus:ring-2 focus:ring-blue-500 bg-gray-50"
                     placeholder="Accra"
@@ -129,12 +135,13 @@ const ShopProduct = () => {
                 </div>
                 <div className="space-y-1">
                   <label className="text-xs font-bold text-gray-500 uppercase">
-                    Phone Number
+                    Street Address
                   </label>
                   <input
+                    name="address"
                     required
                     className="w-full p-3 border outline-none rounded-xl focus:ring-2 focus:ring-blue-500 bg-gray-50"
-                    placeholder="024 000 0000"
+                    placeholder="123 Independence Ave"
                   />
                 </div>
               </div>

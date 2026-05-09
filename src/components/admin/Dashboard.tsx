@@ -21,7 +21,9 @@ export default function Dashboard() {
           <div className="p-1.5 bg-blue-600 rounded-lg">
             <PenTool className="w-4 h-4 text-white" />
           </div>
-          <span className="font-black tracking-tight text-gray-900">LUXE</span>
+          <span>
+            LUXE<span className="font-bold text-blue-600">PENS</span>
+          </span>
         </div>
         <button onClick={toggleSidebar} className="p-2 text-gray-600">
           {isSidebarOpen ? <X size={24} /> : <Menu size={24} />}
@@ -31,17 +33,19 @@ export default function Dashboard() {
       {/* --- SIDEBAR --- */}
       {/* Overlay for mobile */}
       {isSidebarOpen && (
-        <div 
-          className="fixed inset-0 z-40 bg-black/20 backdrop-blur-sm lg:hidden" 
+        <div
+          className="fixed inset-0 z-40 bg-black/20 backdrop-blur-sm lg:hidden"
           onClick={toggleSidebar}
         />
       )}
 
-      <aside className={`
+      <aside
+        className={`
         fixed lg:sticky top-0 left-0 h-screen bg-white border-r w-72 z-50 transition-transform duration-300
         ${isSidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
         flex flex-col
-      `}>
+      `}
+      >
         <div className="flex items-center gap-3 p-8">
           <div className="p-2 bg-blue-600 rounded-lg">
             <PenTool className="w-5 h-5 text-white" />
@@ -53,18 +57,28 @@ export default function Dashboard() {
 
         <nav className="flex-grow px-4 space-y-1">
           <button
-            onClick={() => { setActiveTab("products"); setIsSidebarOpen(false); }}
+            onClick={() => {
+              setActiveTab("products");
+              setIsSidebarOpen(false);
+            }}
             className={`w-full flex items-center gap-4 px-6 py-4 rounded-2xl transition-all font-bold text-sm ${
-              activeTab === "products" ? "bg-blue-600 text-white shadow-lg" : "text-gray-500 hover:bg-gray-50"
+              activeTab === "products"
+                ? "bg-blue-600 text-white shadow-lg"
+                : "text-gray-500 hover:bg-gray-50"
             }`}
           >
             <Package size={20} /> Pen Products
           </button>
 
           <button
-            onClick={() => { setActiveTab("orders"); setIsSidebarOpen(false); }}
+            onClick={() => {
+              setActiveTab("orders");
+              setIsSidebarOpen(false);
+            }}
             className={`w-full flex items-center gap-4 px-6 py-4 rounded-2xl transition-all font-bold text-sm ${
-              activeTab === "orders" ? "bg-blue-600 text-white shadow-lg" : "text-gray-500 hover:bg-gray-50"
+              activeTab === "orders"
+                ? "bg-blue-600 text-white shadow-lg"
+                : "text-gray-500 hover:bg-gray-50"
             }`}
           >
             <ShoppingCart size={20} /> Customer Orders
@@ -82,7 +96,9 @@ export default function Dashboard() {
       <main className="flex-grow p-4 mt-16 md:p-10 lg:mt-0">
         <header className="mb-6 md:mb-10">
           <h1 className="text-2xl font-black text-gray-900 capitalize md:text-3xl">
-            {activeTab === "products" ? "Inventory Management" : "Incoming Orders"}
+            {activeTab === "products"
+              ? "Inventory Management"
+              : "Incoming Orders"}
           </h1>
         </header>
 
