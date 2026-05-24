@@ -72,12 +72,10 @@ const CartItems = () => {
 
                 <div className="flex-grow">
                   <h3 className="font-bold text-gray-900">{item.name}</h3>
-                  <p className="text-xs font-semibold text-blue-600 uppercase">
-                    {item.category}
-                  </p>
+                  
                   <p className="mt-1 text-sm font-bold text-gray-500">
                     {" "}
-                    GH₵ {item.basePrice ? item.basePrice.toFixed(2) : "0.00"}
+                    GH₵ {item.price ? item.price.toFixed(2) : "0.00"}
                   </p>
                 </div>
 

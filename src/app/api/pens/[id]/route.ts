@@ -9,16 +9,15 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    const pen = await prisma.pen.findUnique({
+    const product = await prisma.product.findUnique({
       where: { id: params.id },
-      include: { variants: true },
     });
 
-    if (!pen) {
+    if (!product) {
       return NextResponse.json({ error: "Pen not found" }, { status: 404 });
     }
 
-    return NextResponse.json(pen);
+    return NextResponse.json(product);
   } catch (error) {
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
@@ -32,7 +31,7 @@ export async function PATCH(
   try {
     const body = await req.json();
     
-    const updatedPen = await prisma.pen.update({
+    const updatedPen = await prisma.product.update({
       where: { id: params.id },
       data: body,
     });
@@ -49,7 +48,7 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
-    await prisma.pen.delete({
+    await prisma.product.delete({
       where: { id: params.id },
     });
 

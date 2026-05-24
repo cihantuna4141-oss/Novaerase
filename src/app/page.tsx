@@ -1,6 +1,4 @@
 import Main from "@/components/Main";
-import Navbar from "@/components/Navbar";
-import Product from "@/components/product/Product";
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
