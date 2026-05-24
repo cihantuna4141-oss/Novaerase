@@ -31,14 +31,14 @@ const Specs = () => {
         <div className="flex gap-4 items-end">
           <div className="flex-1 aspect-[3/4] bg-cream-dark rounded-2xl overflow-hidden border border-gold/20">
             <img
-              src="/product-pen.jpg"
+              src="/nov-pen.png"
               alt="Pen"
               className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
             />
           </div>
           <div className="flex-1 aspect-[3/4] bg-cream-dark rounded-2xl overflow-hidden border border-gold/20 mb-8">
             <img
-              src="/product-box.jpg"
+              src="/nov-pen.png"
               alt="Box"
               className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
             />
