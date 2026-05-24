@@ -13,22 +13,22 @@ const specification = [
   {
     icon: "✦",
     title: "Does Not Damage Paper",
-    desc: "Formulated solution that lifts ink without tearing fibres.",
+    desc: "Specially formulated solution that lifts ink without tearing fibres.",
   },
   {
     icon: "⚡",
     title: "Dries Quickly",
-    desc: "Evaporates in seconds, leaving pages dry and ready.",
+    desc: "Evaporates in seconds, leaving pages dry and ready to use again.",
   },
   {
     icon: "◈",
     title: "Non-Abrasive Tip",
-    desc: "Soft precision applicator gentle on delicate paper.",
+    desc: "Soft precision applicator — gentle on delicate or coated paper.",
   },
   {
     icon: "✓",
-    title: "Safe for Most Paper",
-    desc: "Tested on notebooks, textbooks, and planners.",
+    title: "Safe for Most Paper Types",
+    desc: "Tested on notebooks, textbooks, planners and more.",
   },
   {
     icon: "◇",
