@@ -21,7 +21,7 @@ const VideoSection = () => {
         <p className="text-[10px] tracking-[0.3em] text-gold uppercase mb-3 font-bold">
           See It in Action
         </p>
-        <h2 className="text-5xl md:text-6xl font-serif italic text-ink mb-12">
+        <h2 className="text-4xl md:text-6xl font-serif italic text-ink mb-12">
           Watch the highlight disappear.
         </h2>
 
