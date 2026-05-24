@@ -53,7 +53,7 @@ export default function NovareaseDashboard() {
       )}
       <aside
         className={`
-        fixed lg:sticky top-0 left-0 h-screen bg-[#EDE9DF] border-r border-black/5 w-72 z-50 transition-transform duration-500 ease-in-out
+        fixed lg:sticky top-0 left-0 h-screen pb-28 md:pb-4 bg-[#EDE9DF] border-r-2 border-black/5 w-72 z-50 transition-transform duration-500 ease-in-out
         ${isSidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
         flex flex-col
       `}

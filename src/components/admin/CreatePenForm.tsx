@@ -15,7 +15,7 @@ import { toast } from "sonner";
 interface Props {
   onSuccess: () => void;
   onClose: () => void;
-  initialData?: any; // The pen object if we are editing
+  initialData?: any; 
 }
 
 const CreatePenForm = ({ onSuccess, onClose, initialData }: Props) => {
@@ -131,11 +131,11 @@ const CreatePenForm = ({ onSuccess, onClose, initialData }: Props) => {
           <div className="relative">
             <DollarSign className="absolute left-4 top-1/2 -translate-y-1/2 text-gold/40 w-4 h-4" />
             <input
-              name="basePrice"
+              name="price"
               type="number"
               step="0.01"
               required
-              defaultValue={initialData?.basePrice || ""}
+              defaultValue={initialData?.price || ""}
               placeholder="0.00"
               className="w-full pl-11 pr-4 py-2 bg-white border-2 border-gold/30 rounded-lg outline-none focus:ring-2 focus:ring-gold/20 transition-all text-base font-medium"
             />
@@ -239,19 +239,19 @@ const CreatePenForm = ({ onSuccess, onClose, initialData }: Props) => {
           <button
             type="button"
             onClick={onClose}
-            className="flex-1 py-4 text-[11px] font-bold text-ink uppercase bg-white border border-gold/20 rounded-xl hover:bg-cream transition-all"
+            className="flex-1 py-2.5 text-[11px] font-bold text-ink uppercase bg-white border border-gold/20 rounded-lg hover:bg-cream transition-all"
           >
             Cancel
           </button>
           <button
             type="submit"
             disabled={loading}
-            className="flex-[2] flex items-center justify-center gap-3 py-2 text-[11px] font-bold text-cream uppercase bg-ink rounded-xl hover:bg-gold transition-all disabled:bg-ink/40"
+            className="flex-[2] flex items-center justify-center gap-3 py-2.5 text-[11px] font-bold text-cream uppercase bg-ink rounded-lg hover:bg-gold transition-all disabled:bg-ink/40"
           >
             {loading ? (
               <Loader2 className="animate-spin w-4 h-4" />
             ) : (
-              <>{isEditing ? "Update Product" : "Curate Entry"}</>
+              <>{isEditing ? "Update Product" : "Create Entry"}</>
             )}
           </button>
         </div>
