@@ -2,14 +2,30 @@
 
 import React, { useState, useEffect } from "react";
 import CreatePenForm from "./CreatePenForm";
-
-import { Loader2, Plus, Box, X, Search, Filter } from "lucide-react";
+import { Loader2, Plus, Eraser, X, Search } from "lucide-react";
 import ProductsList from "./ProductsList";
+import { Modal } from "antd";
 
 const ProductsManagement = () => {
   const [pens, setPens] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingPen, setEditingPen] = useState<any>(null);
+
+  const handleEdit = (pen: any) => {
+    setEditingPen(pen);
+    setIsModalOpen(true);
+  };
+
+  const handleAddNew = () => {
+    setEditingPen(null);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setEditingPen(null);
+  };
 
   const fetchPens = async () => {
     try {
@@ -28,93 +44,107 @@ const ProductsManagement = () => {
   }, []);
 
   return (
-    <div className="space-y-6 duration-700 md:space-y-8 animate-in fade-in slide-in-from-bottom-4">
-      {/* RESPONSIVE TOP BAR */}
-      <div className="flex flex-col justify-between gap-4 p-4 bg-white border shadow-sm lg:flex-row md:p-6 rounded-2xl border-slate-200/60">
-        <div className="flex items-center gap-4">
-          <div className="flex items-center justify-center w-12 h-12 bg-indigo-600 shadow-lg md:w-14 md:h-14 rounded-2xl shrink-0">
-            <Box className="text-white" size={24} />
+    <div className="space-y-3 animate-in fade-in duration-1000">
+      {/* HEADER SECTION */}
+      <div className="flex flex-col justify-between gap-6 px-4 py-2.5 bg-white border border-gold/10 shadow-sm lg:flex-row md:items-center rounded-lg">
+        <div className="flex items-center gap-3">
+          <div className="flex items-center justify-center w-16 h-16 bg-ink shadow-xl rounded-xl shrink-0">
+            <Eraser className="text-gold" size={28} />
           </div>
           <div>
-            <h2 className="text-xl font-black tracking-tight md:text-2xl text-slate-900">
+            <h2 className="font-serif text-3xl tracking-tight text-ink">
               Inventory
             </h2>
-            <p className="text-xs font-medium md:text-sm text-slate-400">
-              Manage your pen collection
+            <p className="text-[10px] font-bold text-gold uppercase tracking-[0.25em] mt-1">
+              Curating the Novarease collection
             </p>
           </div>
         </div>
 
-        <div className="flex items-start gap-3 sm:items-center">
-          <div className="relative w-auto">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+          <div className="relative">
             <Search
-              className="absolute -translate-y-1/2 left-3 top-1/2 text-slate-400"
+              className="absolute -translate-y-1/2 left-4 top-1/2 text-gold/50"
               size={16}
             />
             <input
-              placeholder="Search..."
-              className="w-full sm:w-64 pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-indigo-500/20"
+              placeholder="Search Products..."
+              className="w-full sm:w-64 pl-12 pr-6 py-3 bg-cream/40 border-2 border-gold/10 rounded-xl text-xs font-medium outline-none focus:ring-2 focus:ring-gold/20 placeholder:text-gold/30"
             />
           </div>
           <button
-            onClick={() => setIsModalOpen(true)}
-            className="flex items-center justify-center gap-2 px-6 py-2.5 font-bold text-white transition-all bg-slate-900 hover:bg-indigo-600 rounded-xl active:scale-95"
+            onClick={handleAddNew}
+            className="flex items-center justify-center gap-3 px-8 py-3.5 text-[11px] font-bold text-cream tracking-[0.15em] uppercase transition-all bg-ink hover:bg-gold rounded-xl active:scale-95 shadow-xl shadow-gold/5"
           >
-            <Plus size={18} /> Add{" "}
-            <span className="hidden sm:inline">Product</span>
+            <Plus size={16} /> New Entry
           </button>
         </div>
       </div>
 
-      {/* TABLE SECTION (Must have overflow-x-auto) */}
-      <section className="pb-10 overflow-x-hidden">
-        {/* Wrap your ProductsList in a div with min-width to prevent squishing on mobile */}
-        <div className="l">
-          {loading ? (
-            <div className="flex flex-col items-center py-20">
-              <Loader2 className="text-indigo-600 animate-spin" />
-            </div>
-          ) : (
-            <ProductsList
-              pens={pens}
-              onRefresh={fetchPens}
-              onEdit={(pen) => {
-                console.log("Edit requested for:", pen);
-              }}
-            />
-          )}
-        </div>
+      {/* INVENTORY LIST */}
+      <section>
+        {loading ? (
+          <div className="flex flex-col items-center py-32 gap-4">
+            <Loader2 className="text-gold animate-spin" size={32} />
+            <p className="text-[10px] font-bold text-gold uppercase tracking-[0.4em] animate-pulse">
+              Syncing Products
+            </p>
+          </div>
+        ) : (
+          <ProductsList pens={pens} onRefresh={fetchPens} onEdit={handleEdit} />
+        )}
       </section>
 
-      {/* RESPONSIVE MODAL */}
-      {isModalOpen && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6">
-          <div
-            className="absolute inset-0 bg-slate-900/40 backdrop-blur-md"
-            onClick={() => setIsModalOpen(false)}
+      {/* LUXURY CREATION MODAL */}
+      <Modal
+        open={isModalOpen}
+        onCancel={() => setIsModalOpen(false)}
+        footer={null}
+        centered
+        closeIcon={
+          <X
+            size={20}
+            className="text-ink/30 hover:text-ink transition-colors"
           />
-          <div className="relative w-full max-w-lg max-h-[90vh] overflow-y-auto bg-white border rounded-3xl shadow-2xl animate-in zoom-in-95">
-            {/* Modal Header */}
-            <div className="sticky top-0 z-10 flex items-center justify-between px-6 py-4 border-b bg-white/80 backdrop-blur-md">
-              <h3 className="text-lg font-black text-slate-900">
-                New Pen Entry
-              </h3>
-              <button
-                onClick={() => setIsModalOpen(false)}
-                className="p-2 rounded-full hover:bg-slate-100"
-              >
-                <X size={20} />
-              </button>
-            </div>
-            <div className="p-6 md:p-8">
-              <CreatePenForm
-                onSuccess={fetchPens}
-                onClose={() => setIsModalOpen(false)}
-              />
-            </div>
-          </div>
+        }
+        width={350}
+        styles={{
+          mask: {
+            backdropFilter: "blur(12px)",
+            backgroundColor: "rgba(26, 26, 24, 0.7)", // Ink/60
+          },
+          content: {
+            backgroundColor: "#F5F2EB", // Cream
+            padding: "0px", // We'll use internal padding for the header/body
+            border: "1px solid rgba(184, 151, 58, 0.15)",
+            boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.5)",
+            overflow: "hidden",
+          },
+        }}
+      >
+        {/* Custom Header (Antd's title prop is limited, so we place it inside the content) */}
+        <div className="px-4 py-12 pb-3 border-b border-gold/10 bg-white/50">
+          <h3 className="font-serif text-2xl text-ink uppercase tracking-wider">
+            Product Entry
+          </h3>
+          <p className="text-[10px] font-bold text-gold uppercase tracking-[0.3em] mt-1">
+            Expansion of the archival collection
+          </p>
         </div>
-      )}
+
+        {/* Modal Body */}
+        <div className="p-5 max-h-[75vh] overflow-y-auto custom-scrollbar">
+          <CreatePenForm
+            onSuccess={() => {
+              fetchPens();
+              handleCloseModal(); // Use the unified close handler
+            }}
+            onClose={handleCloseModal}
+            initialData={editingPen} // This will be null for new entries
+            key={editingPen ? editingPen.id : "new-entry"} // FORCING RE-RENDER
+          />
+        </div>
+      </Modal>
     </div>
   );
 };

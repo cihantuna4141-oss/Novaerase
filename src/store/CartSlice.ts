@@ -43,12 +43,12 @@ const cartSlice = createSlice({
 
       if (existingItem) {
         existingItem.quantity++;
-        existingItem.totalPrice += newItem.basePrice;
+        existingItem.totalPrice += newItem.price;
       } else {
         state.items.push({
           ...newItem,
           quantity: 1,
-          totalPrice: newItem.basePrice,
+          totalPrice: newItem.price,
         });
       }
 
@@ -65,7 +65,7 @@ const cartSlice = createSlice({
           state.items = state.items.filter((item) => item.id !== idToRemove);
         } else {
           existingItem.quantity--;
-          existingItem.totalPrice -= existingItem.basePrice;
+          existingItem.totalPrice -= existingItem.price;
         }
         state.totalQuantity--;
         saveCartToLocalStorage(state.items);

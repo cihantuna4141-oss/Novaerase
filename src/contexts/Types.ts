@@ -15,10 +15,8 @@ export interface PenData {
   id: string;
   name: string;
   description: string;
-  basePrice: number;
-  category: "Ballpoint" | "Fountain" | "Gel" | string; 
+  price: number;
   images: string[];
-  variants: Variant[]; // Array of variants included
 }
 
 // Type for creating a new Pen (omitting the auto-generated ID)
@@ -28,3 +26,31 @@ export type CreatePenInput = Omit<PenData, 'id' | 'variants'> & {
 
 // Type for updating a Pen (everything is optional except ID)
 export type UpdatePenInput = Partial<CreatePenInput>;
+
+
+export interface OrderItem {
+  id: string;
+  productName: string;
+  productImage: string;
+  quantity: number;
+  totalPrice: number;
+}
+
+export interface Order {
+  id: string;
+  orderNumber: string;
+  orderStatus: "PROCESSING" | "SHIPPED" | "DELIVERED" | "CANCELLED";
+  paymentStatus: "PAID" | "PENDING" | "FAILED";
+  customerName: string;
+  customerPhone: string;
+  customerEmail: string;
+  totalAmount: number;
+  country?: string;
+  houseAddress?: string;
+  streetName?: string;
+  town?: string;
+  state?: string;
+  zipCode?: string;
+  createdAt: string;
+  items: OrderItem[];
+}

@@ -5,7 +5,6 @@ import { useSelector } from "react-redux";
 import { Heart, Home } from "lucide-react";
 import Link from "next/link";
 import { RootState } from "@/store/Store";
-import ProductCard from "@/components/product/ProductCard";
 
 const FavoritesCard = () => {
   const favoriteItems = useSelector((state: RootState) => state.favorites.items);
@@ -29,11 +28,7 @@ const FavoritesCard = () => {
             </Link>
           </div>
         ) : (
-          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {favoriteItems.map((pen) => (
-              <ProductCard key={pen.id} {...pen} />
-            ))}
-          </div>
+          <div></div>
         )}
       </div>
     </div>

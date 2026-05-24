@@ -13,46 +13,84 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// schema.prisma
-model Pen {
-  id          String   @id @default(cuid())
-  name        String
-  description String
-  basePrice   Float
-  category    String   // Ballpoint, Fountain, Gel
-  images      String[] // Array of image URLs
-  variants    Variant[]
+model Admin {
+  id                String    @id @default(cuid())
+  firstName         String
+  lastName          String
+  email             String    @unique
+  phoneNumber       String    @unique
+  password          String    
+  passwordChanged   Boolean   @default(false)
+  verificationCode  String?
+  codeExpires       DateTime?
+  role              String    @default("ADMIN")
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime    @updatedAt
 }
 
-model Variant {
-  id        String  @id @default(cuid())
-  penId     String
-  pen       Pen     @relation(fields: [penId], references: [id])
-  inkColor  String  // e.g., "Midnight Blue"
-  tipSize   String  // e.g., "0.5mm"
-  stock     Int
-  price     Float?  // Optional: override base price
+model Product {
+  id                     String   @id @default(cuid())
+  name                   String
+  description            String?
+  price                  Float
+  images                 String[]
+
+  orderItems             OrderItem[] 
+
 }
 
 model Order {
-  id              String      @id @default(cuid())
-  customerName    String
-  email           String?
-  phone           String
-  address         String
-  city            String
-  paymentMethod   String      // "card" or "momo"
-  totalAmount     Float
-  status          String      @default("Pending") // Pending, Shipped, Delivered
-  createdAt       DateTime    @default(now())
-  items           OrderItem[]
+  id                    String      @id @default(uuid())
+  orderNumber           String      @unique 
+  customerName          String
+  customerEmail         String
+  customerPhone         String
+  
+  // Shipping Address Details
+  houseAddress          String
+  streetName            String
+  town                  String
+  state                 String?
+  zipCode               String
+  country               String?     
+  
+  // Financials
+  subtotal              Float
+  shippingCost          Float
+  totalAmount           Float
+  currency              String      @default("GHS")
+  
+  // Payment & Status
+  paymentStatus         String      @default("PENDING") // PENDING, PAID, FAILED
+  paymentReference      String?     @unique             // From Paystack
+  orderStatus           String      @default("PROCESSING") // PROCESSING, SHIPPED, DELIVERED, CANCELLED
+  
+  items                 OrderItem[]
+  
+  createdAt             DateTime    @default(now())
+  updatedAt             DateTime    @updatedAt
 }
 
 model OrderItem {
-  id        String @id @default(cuid())
-  orderId   String
-  order     Order  @relation(fields: [orderId], references: [id])
-  penName   String
-  price     Float
-  quantity  Int
+  id                      String  @id @default(uuid())
+  orderId                 String
+  productId               String
+  productName             String
+  productImage            String?  
+  priceAtSale             Float
+  quantity                Int
+  totalPrice              Float   
+
+  order                   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product                 Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+}
+
+model Contact {
+  id        String   @id @default(uuid())
+  fullName  String
+  email     String
+  subject   String
+  message   String   @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

@@ -78,8 +78,7 @@ async function uploadImageToGCS(
 // GET: Fetch all pens
 export async function GET() {
   try {
-    const pens = await prisma.pen.findMany({
-      include: { variants: true },
+    const pens = await prisma.product.findMany({
       orderBy: { name: "asc" }
     });
     return NextResponse.json({ success: true, data: pens });
@@ -88,7 +87,7 @@ export async function GET() {
   }
 }
 
-// POST: Create a pen with Image Upload
+// POST: Create a product with Image Upload
 export async function POST(req: NextRequest) {
   try {
     const { fields, files } = await parseFormData(req);
@@ -96,10 +95,10 @@ export async function POST(req: NextRequest) {
     // Extract basic fields
     const name = fields.name?.[0];
     const description = fields.description?.[0];
-    const basePrice = fields.basePrice?.[0];
+    const price = fields.price?.[0];
     const category = fields.category?.[0];
 
-    if (!name || !basePrice) {
+    if (!name || !price) {
       return NextResponse.json({ error: "Name and Price are required" }, { status: 400 });
     }
 
@@ -121,12 +120,11 @@ export async function POST(req: NextRequest) {
     }
 
     // Save to Prisma
-    const newPen = await prisma.pen.create({
+    const newPen = await prisma.product.create({
       data: {
         name,
         description: description || "",
-        basePrice: parseFloat(basePrice),
-        category: category || "General",
+        price: parseFloat(price),
         images: imageUrls,
       },
     });
@@ -141,9 +139,9 @@ export async function POST(req: NextRequest) {
 // DELETE ALL
 export async function DELETE() {
     try {
-      await prisma.variant.deleteMany();
-      await prisma.pen.deleteMany();
-      return NextResponse.json({ message: "All pens deleted" });
+      await prisma.product.deleteMany();
+      await prisma.product.deleteMany();
+      return NextResponse.json({ message: "All products deleted" });
     } catch (error: any) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }

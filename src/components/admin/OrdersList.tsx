@@ -1,10 +1,20 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Smartphone, MapPin, Hash, Package, ArrowUpRight, X, User, CreditCard } from "lucide-react";
+import {
+  Smartphone,
+  MapPin,
+  Hash,
+  Package,
+  ArrowUpRight,
+  X,
+  User,
+  CreditCard,
+  Eraser,
+} from "lucide-react";
 
 const OrdersList = () => {
   const [orders, setOrders] = useState([]);
-  const [selectedOrder, setSelectedOrder] = useState<any>(null); // State for the Modal
+  const [selectedOrder, setSelectedOrder] = useState<any>(null);
 
   useEffect(() => {
     fetch("/api/orders")
@@ -13,140 +23,154 @@ const OrdersList = () => {
   }, []);
 
   return (
-    <div className="grid grid-cols-1 gap-4 pb-20 md:grid-cols-2 lg:grid-cols-3">
+    <div className="grid grid-cols-1 gap-6 pb-20 md:grid-cols-2 xl:grid-cols-3">
       {orders.map((order: any) => (
         <div
           key={order.id}
-          className="flex flex-col items-start justify-between gap-4 p-4 transition-colors bg-white border shadow-sm rounded-xl border-slate-200/60 hover:border-indigo-200"
+          className="flex flex-col items-start justify-between gap-6 p-6 transition-all bg-white border border-gold/10 shadow-sm rounded-[2rem] hover:shadow-xl hover:shadow-gold/5 group"
         >
-          {/* Compact Info */}
-          <div className="flex items-center gap-6">
-            <div className="flex flex-col items-start gap-2">
-              <span className="text-[10px] font-black bg-emerald-500 text-white px-2 py-0.5 rounded shadow-sm">
-                PAID
-              </span>
-              <span className="text-[11px] text-slate-400 font-mono italic">
-                #{order.id.slice(-8)}
+          <div className="flex items-center w-full gap-4">
+            <div className="flex flex-col items-center justify-center p-3 rounded-2xl bg-cream">
+              <span className="text-[10px] font-bold text-gold uppercase tracking-tighter italic">
+                #{order.id.slice(-6)}
               </span>
             </div>
-            <div>
-              <h3 className="text-lg font-black leading-tight uppercase text-slate-900">
+            <div className="flex-grow">
+              <h3 className="font-serif text-xl text-ink leading-tight uppercase tracking-wide">
                 {order.customerName}
               </h3>
-              <p className="text-xs font-medium text-slate-400">
-                {order.items?.length || 0} items • GH₵ {order.totalAmount.toFixed(2)}
+              <p className="text-[10px] font-bold text-gold uppercase tracking-[0.2em] mt-1">
+                {order.items?.length || 0} Products • GH₵{" "}
+                {order.totalAmount.toFixed(2)}
               </p>
             </div>
           </div>
 
-          {/* Action Button */}
-          <button 
+          <button
             onClick={() => setSelectedOrder(order)}
-            className="flex items-center justify-center gap-2 px-3 py-2 text-sm font-black transition-all bg-white border-2 rounded-lg border-slate-900 text-slate-900 hover:bg-slate-900 hover:text-white shrink-0 active:scale-95"
+            className="flex items-center justify-center w-full gap-2 py-3 text-[11px] font-bold tracking-widest text-cream uppercase transition-all bg-ink rounded-xl hover:bg-gold active:scale-95"
           >
-            Details <ArrowUpRight size={18} />
+            Review Request <ArrowUpRight size={16} />
           </button>
         </div>
       ))}
 
-      {/* --- ORDER DETAILS MODAL --- */}
+      {/* --- LUXURY ORDER MODAL --- */}
       {selectedOrder && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-          {/* Backdrop */}
-          <div 
-            className="absolute inset-0 duration-300 bg-slate-900/40 backdrop-blur-md animate-in fade-in"
-            onClick={() => setSelectedOrder(null)} 
+          <div
+            className="absolute inset-0 duration-500 bg-ink/60 backdrop-blur-md animate-in fade-in"
+            onClick={() => setSelectedOrder(null)}
           />
-          
-          {/* Modal Box */}
-          <div className="relative w-full max-w-2xl overflow-hidden duration-300 bg-white rounded-lg shadow-2xl animate-in zoom-in-95">
-            {/* Header */}
-            <div className="flex items-center justify-between px-8 py-4 border-b border-slate-100 bg-slate-50/50">
-              <div className="flex items-center gap-3">
-                <div className="flex items-center justify-center w-10 h-10 text-white bg-indigo-600 rounded-xl">
-                  <User size={20} />
+
+          <div className="relative w-full max-w-2xl overflow-hidden duration-500 bg-cream rounded-[2.5rem] shadow-2xl animate-in zoom-in-95">
+            <div className="flex items-center justify-between px-10 py-6 border-b border-gold/10 bg-white/50">
+              <div className="flex items-center gap-4">
+                <div className="flex items-center justify-center w-12 h-12 rounded-2xl bg-ink text-gold shadow-lg shadow-gold/10">
+                  <User size={22} />
                 </div>
                 <div>
-                  <h3 className="text-lg font-black text-slate-900">{selectedOrder.customerName}</h3>
-                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest italic">Order #{selectedOrder.id.toUpperCase().slice(-8)}</p>
+                  <h3 className="font-serif text-2xl text-ink uppercase tracking-wider">
+                    {selectedOrder.customerName}
+                  </h3>
+                  <p className="text-[9px] font-bold text-gold uppercase tracking-[0.3em]">
+                    Reference: {selectedOrder.id.toUpperCase()}
+                  </p>
                 </div>
               </div>
-              <button 
+              <button
                 onClick={() => setSelectedOrder(null)}
-                className="flex items-center justify-center w-10 h-10 transition rounded-full hover:bg-slate-200 text-slate-400"
+                className="flex items-center justify-center w-10 h-10 transition rounded-full hover:bg-ink hover:text-cream text-ink/30"
               >
                 <X size={20} />
               </button>
             </div>
 
-            {/* Content Body */}
-            <div className="p-8 max-h-[70vh] overflow-y-auto space-y-8">
-              
-              {/* 1. Customer Contact & Address */}
+            <div className="p-10 max-h-[70vh] overflow-y-auto space-y-10">
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                <div className="flex items-center gap-4 p-4 text-sm border text-slate-600 bg-slate-50 rounded-2xl border-slate-100">
-                  <Smartphone size={20} className="text-indigo-500 shrink-0" />
+                <div className="p-5 border bg-white rounded-[2rem] border-gold/10 flex items-center gap-4">
+                  <Smartphone size={20} className="text-gold" />
                   <div>
-                    <p className="text-[10px] font-bold text-slate-400 uppercase">Contact</p>
-                    <span className="font-bold">{selectedOrder.phone}</span>
+                    <p className="text-[9px] font-bold text-gold uppercase tracking-widest mb-1">
+                      Contact
+                    </p>
+                    <span className="text-sm font-bold text-ink">
+                      {selectedOrder.phone}
+                    </span>
                   </div>
                 </div>
-                <div className="flex items-center gap-4 p-4 text-sm border text-slate-600 bg-slate-50 rounded-2xl border-slate-100">
-                  <MapPin size={20} className="text-indigo-500 shrink-0" />
+                <div className="p-5 border bg-white rounded-[2rem] border-gold/10 flex items-center gap-4">
+                  <MapPin size={20} className="text-gold" />
                   <div>
-                    <p className="text-[10px] font-bold text-slate-400 uppercase">Delivery Address</p>
-                    <span className="font-bold">{selectedOrder.city}, {selectedOrder.address}</span>
+                    <p className="text-[9px] font-bold text-gold uppercase tracking-widest mb-1">
+                      Destination
+                    </p>
+                    <span className="text-sm font-bold text-ink">
+                      {selectedOrder.city}, {selectedOrder.address}
+                    </span>
                   </div>
                 </div>
               </div>
 
-              {/* 2. Order Items (Contents) */}
-              <div className="p-6 border bg-slate-50/30 rounded-3xl border-slate-100">
-                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2">
-                  <Package size={14} /> Shipment Contents
+              <div className="p-8 border bg-white/40 rounded-[2.5rem] border-gold/10">
+                <p className="text-[10px] font-black text-ink/30 uppercase tracking-[0.4em] mb-6 flex items-center gap-2">
+                  <Eraser size={14} className="text-gold" /> Shipment Manifest
                 </p>
-                <div className="space-y-3">
+                <div className="space-y-4">
                   {selectedOrder.items.map((item: any, i: number) => (
-                    <div key={i} className="flex items-center justify-between pb-3 text-sm border-b border-slate-200/50 last:border-0 last:pb-0">
-                      <span className="font-bold text-slate-700">
-                        <span className="mr-2 text-indigo-600 px-2 py-0.5 bg-indigo-50 rounded-lg">{item.quantity}x</span> 
+                    <div
+                      key={i}
+                      className="flex items-center justify-between pb-4 border-b border-gold/5 last:border-0 last:pb-0"
+                    >
+                      <span className="text-sm font-bold text-ink">
+                        <span className="mr-3 text-gold italic font-serif text-base">
+                          {item.quantity}x
+                        </span>
                         {item.penName}
                       </span>
-                      <span className="font-mono font-bold text-slate-400">GH₵ {item.price.toFixed(2)}</span>
+                      <span className="font-mono text-xs font-bold text-ink/40">
+                        GH₵ {item.price.toFixed(2)}
+                      </span>
                     </div>
                   ))}
                 </div>
               </div>
 
-              {/* 3. Payment Summary (Dark Block) */}
-              <div className="flex flex-col md:flex-row items-center justify-between p-6 bg-slate-900 rounded-[2rem] text-white shadow-xl shadow-indigo-100">
+              <div className="flex flex-col md:flex-row items-center justify-between p-8 bg-ink rounded-[2.5rem] text-cream shadow-2xl shadow-gold/10">
                 <div className="flex items-center gap-4 mb-4 md:mb-0">
-                  <div className="flex items-center justify-center w-12 h-12 bg-white/10 rounded-2xl">
-                    <CreditCard size={24} className="text-indigo-400" />
+                  <div className="flex items-center justify-center w-14 h-14 bg-white/5 rounded-2xl border border-white/5">
+                    <CreditCard size={26} className="text-gold" />
                   </div>
                   <div>
-                    <p className="text-[10px] font-bold text-slate-400 uppercase">Payment via</p>
-                    <p className="text-sm font-black tracking-wider uppercase">{selectedOrder.paymentMethod}</p>
+                    <p className="text-[9px] font-bold text-gold uppercase tracking-widest mb-1">
+                      Payment method
+                    </p>
+                    <p className="text-xs font-bold tracking-widest uppercase">
+                      {selectedOrder.paymentMethod}
+                    </p>
                   </div>
                 </div>
                 <div className="text-center md:text-right">
-                  <p className="text-[10px] font-bold text-slate-400 uppercase mb-1">Total Revenue</p>
-                  <p className="text-3xl font-black text-indigo-400">GH₵ {selectedOrder.totalAmount.toFixed(2)}</p>
+                  <p className="text-[10px] font-bold text-gold uppercase tracking-widest mb-1">
+                    Revenue
+                  </p>
+                  <p className="text-4xl font-serif italic text-gold">
+                    GH₵ {selectedOrder.totalAmount.toFixed(2)}
+                  </p>
                 </div>
               </div>
             </div>
 
-            {/* Modal Footer */}
-            <div className="flex gap-3 p-4 border-t bg-slate-50">
-               <button className="flex-1 py-2.5 text-sm font-black text-white transition bg-indigo-600 shadow-lg rounded-2xl hover:bg-indigo-700 active:scale-95 shadow-indigo-100">
-                 Mark as Delivered
-               </button>
-               <button 
-                 onClick={() => setSelectedOrder(null)}
-                 className="flex-1 py-2.5 text-sm font-black transition bg-white border-2 border-slate-200 text-slate-600 rounded-2xl hover:bg-slate-50 active:scale-95"
-               >
-                 Close
-               </button>
+            <div className="flex gap-4 p-8 border-t border-gold/10 bg-white/30">
+              <button className="flex-1 py-4 text-[11px] font-bold tracking-[0.2em] text-cream uppercase bg-ink rounded-2xl hover:bg-gold transition-all duration-300">
+                Finalize Shipment
+              </button>
+              <button
+                onClick={() => setSelectedOrder(null)}
+                className="flex-1 py-4 text-[11px] font-bold tracking-[0.2em] text-ink uppercase bg-white border border-gold/20 rounded-2xl hover:bg-cream transition-all"
+              >
+                Close
+              </button>
             </div>
           </div>
         </div>
