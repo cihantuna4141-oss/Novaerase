@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { Pencil, Trash2, Layers, MoreHorizontal } from "lucide-react";
+import { Pencil, Trash2, Layers } from "lucide-react";
 import { toast } from "sonner";
 
 interface Props {
@@ -28,7 +28,7 @@ const ProductsList = ({ pens, onRefresh, onEdit }: Props) => {
         {pens.map((pen) => (
           <div
             key={pen.id}
-            className="bg-white p-5 rounded-[2rem] border border-gold/10 shadow-sm flex items-start gap-5"
+            className="bg-white p-5 rounded-lg border border-gold/10 shadow-sm flex items-start gap-5"
           >
             <div className="relative flex-shrink-0 w-24 h-24 overflow-hidden border bg-cream rounded-2xl border-gold/10">
               <Image
@@ -44,14 +44,14 @@ const ProductsList = ({ pens, onRefresh, onEdit }: Props) => {
                   <h4 className="font-serif text-lg text-ink leading-tight">
                     {pen.name}
                   </h4>
-                  <span className="inline-block px-3 py-1 mt-2 rounded-full bg-cream text-gold text-[9px] font-bold tracking-widest uppercase border border-gold/10">
-                    {pen.category}
-                  </span>
+                  <div className="text-[9px] text-gold font-mono tracking-widest uppercase mt-1 opacity-50">
+                    Ref: {pen.id.slice(-6)}
+                  </div>
                 </div>
               </div>
               <div className="flex items-center justify-between mt-5">
                 <div className="text-sm font-bold text-ink">
-                  GH₵ {pen.price.toFixed(2)}
+                  $ {pen.price.toFixed(2)}
                 </div>
                 <div className="flex gap-2">
                   <button

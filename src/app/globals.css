@@ -124,3 +124,18 @@ body {
     transform: translateX(-50%) translateY(8px);
   }
 }
+
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #b8973a20; /* Faded Gold */
+  border-radius: 10px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #b8973a; /* Solid Gold */
+}

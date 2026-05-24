@@ -2,20 +2,30 @@
 
 import React, { useState, useEffect } from "react";
 import CreatePenForm from "./CreatePenForm";
-import {
-  Loader2,
-  Plus,
-  Eraser,
-  X,
-  Search,
-} from "lucide-react";
+import { Loader2, Plus, Eraser, X, Search } from "lucide-react";
 import ProductsList from "./ProductsList";
-import { Modal, ConfigProvider } from "antd"; 
+import { Modal } from "antd";
 
 const ProductsManagement = () => {
   const [pens, setPens] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingPen, setEditingPen] = useState<any>(null);
+
+  const handleEdit = (pen: any) => {
+    setEditingPen(pen);
+    setIsModalOpen(true);
+  };
+
+  const handleAddNew = () => {
+    setEditingPen(null);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setEditingPen(null);
+  };
 
   const fetchPens = async () => {
     try {
@@ -36,7 +46,7 @@ const ProductsManagement = () => {
   return (
     <div className="space-y-3 animate-in fade-in duration-1000">
       {/* HEADER SECTION */}
-      <div className="flex flex-col justify-between gap-6 p-4 bg-white border border-gold/10 shadow-sm lg:flex-row md:items-center rounded-lg">
+      <div className="flex flex-col justify-between gap-6 px-4 py-2.5 bg-white border border-gold/10 shadow-sm lg:flex-row md:items-center rounded-lg">
         <div className="flex items-center gap-3">
           <div className="flex items-center justify-center w-16 h-16 bg-ink shadow-xl rounded-xl shrink-0">
             <Eraser className="text-gold" size={28} />
@@ -63,7 +73,7 @@ const ProductsManagement = () => {
             />
           </div>
           <button
-            onClick={() => setIsModalOpen(true)}
+            onClick={handleAddNew}
             className="flex items-center justify-center gap-3 px-8 py-3.5 text-[11px] font-bold text-cream tracking-[0.15em] uppercase transition-all bg-ink hover:bg-gold rounded-xl active:scale-95 shadow-xl shadow-gold/5"
           >
             <Plus size={16} /> New Entry
@@ -81,21 +91,22 @@ const ProductsManagement = () => {
             </p>
           </div>
         ) : (
-          <ProductsList
-            pens={pens}
-            onRefresh={fetchPens}
-            onEdit={(pen) => console.log("Edit requested for:", pen)}
-          />
+          <ProductsList pens={pens} onRefresh={fetchPens} onEdit={handleEdit} />
         )}
       </section>
 
       {/* LUXURY CREATION MODAL */}
-       <Modal
+      <Modal
         open={isModalOpen}
         onCancel={() => setIsModalOpen(false)}
-        footer={null} 
+        footer={null}
         centered
-        closeIcon={<X size={20} className="text-ink/30 hover:text-ink transition-colors" />}
+        closeIcon={
+          <X
+            size={20}
+            className="text-ink/30 hover:text-ink transition-colors"
+          />
+        }
         width={350}
         styles={{
           mask: {
@@ -112,7 +123,7 @@ const ProductsManagement = () => {
         }}
       >
         {/* Custom Header (Antd's title prop is limited, so we place it inside the content) */}
-        <div className="px-4 pt-10 pb-3 border-b border-gold/10 bg-white/50">
+        <div className="px-4 py-12 pb-3 border-b border-gold/10 bg-white/50">
           <h3 className="font-serif text-2xl text-ink uppercase tracking-wider">
             Product Entry
           </h3>
@@ -124,8 +135,13 @@ const ProductsManagement = () => {
         {/* Modal Body */}
         <div className="p-5 max-h-[75vh] overflow-y-auto custom-scrollbar">
           <CreatePenForm
-            onSuccess={fetchPens}
-            onClose={() => setIsModalOpen(false)}
+            onSuccess={() => {
+              fetchPens();
+              handleCloseModal(); // Use the unified close handler
+            }}
+            onClose={handleCloseModal}
+            initialData={editingPen} // This will be null for new entries
+            key={editingPen ? editingPen.id : "new-entry"} // FORCING RE-RENDER
           />
         </div>
       </Modal>
