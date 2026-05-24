@@ -65,7 +65,7 @@ const OrderCTA = () => {
 
         <motion.h2
           variants={itemVariants}
-          className="font-serif text-4xl md:text-6xl text-ink leading-tight"
+          className="font-serif text-5xl md:text-6xl text-ink leading-tight"
         >
           Extend the life <br /> of your <span className="italic">books.</span>
         </motion.h2>

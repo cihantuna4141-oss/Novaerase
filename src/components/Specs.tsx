@@ -2,12 +2,11 @@
 
 import React, { useEffect, useState } from "react";
 import { motion, Variants } from "framer-motion";
-import Link from "next/link";
 import { ShoppingCart, Loader2 } from "lucide-react";
-import { useDispatch } from "react-redux"; // Added
-import { useRouter } from "next/navigation"; // Added
-import { CartActions } from "@/store/CartSlice"; // Added
-import { toast } from "sonner"; // Added
+import { useDispatch } from "react-redux"; 
+import { useRouter } from "next/navigation"; 
+import { CartActions } from "@/store/CartSlice"; 
+import { toast } from "sonner"; 
 
 const specification = [
   {
@@ -40,8 +39,8 @@ const specification = [
 const Specs = () => {
   const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const dispatch = useDispatch(); // Initialize dispatch
-  const router = useRouter(); // Initialize router
+  const dispatch = useDispatch();
+  const router = useRouter();
 
   useEffect(() => {
     const getProducts = async () => {
