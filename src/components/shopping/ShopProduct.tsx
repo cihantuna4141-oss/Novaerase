@@ -4,7 +4,6 @@ import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/store/Store";
 import { CartActions } from "@/store/CartSlice";
-import Navbar from "@/components/Navbar";
 import {
   CreditCard,
   Smartphone,
@@ -78,7 +77,6 @@ const ShopProduct = () => {
 
   return (
     <div className="min-h-screen pb-20 bg-gray-50">
-      <Navbar />
       <div className="max-w-6xl px-4 py-10 mx-auto">
         <Link
           href="/cart"

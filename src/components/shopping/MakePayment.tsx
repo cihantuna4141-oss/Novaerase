@@ -3,12 +3,11 @@
 import React from "react";
 import { CheckCircle2, ShoppingBag, ArrowRight } from "lucide-react";
 import Link from "next/link";
-import Navbar from "@/components/Navbar";
+
 
 const MakePayment = () => {
   return (
     <div className="min-h-screen bg-gray-50">
-      <Navbar />
       <div className="flex flex-col items-center justify-center px-4 py-20 text-center">
         <div className="p-6 mb-6 bg-green-100 rounded-full">
           <CheckCircle2 className="w-20 h-20 text-green-600" />

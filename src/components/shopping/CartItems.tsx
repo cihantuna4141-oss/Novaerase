@@ -7,7 +7,6 @@ import { Trash2, Plus, Minus, ShoppingBag, ArrowRight } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/Store";
 import { CartActions } from "@/store/CartSlice";
-import Navbar from "@/components/Navbar";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
@@ -23,7 +22,6 @@ const CartItems = () => {
   if (items.length === 0) {
     return (
       <div className="min-h-screen bg-gray-50">
-        <Navbar />
         <div className="flex flex-col items-center justify-center px-4 py-20">
           <div className="p-8 mb-6 bg-white rounded-full shadow-sm">
             <ShoppingBag className="w-16 h-16 text-gray-300" />
@@ -47,7 +45,6 @@ const CartItems = () => {
 
   return (
     <div className="min-h-screen pb-20 bg-gray-50">
-      <Navbar />
       <div className="max-w-6xl px-4 py-10 mx-auto">
         <h1 className="flex items-center gap-3 mb-8 text-3xl font-bold text-gray-900">
           Shopping Cart{" "}

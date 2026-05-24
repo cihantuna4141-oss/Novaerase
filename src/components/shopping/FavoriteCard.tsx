@@ -5,7 +5,6 @@ import { useSelector } from "react-redux";
 import { Heart, Home } from "lucide-react";
 import Link from "next/link";
 import { RootState } from "@/store/Store";
-import Navbar from "@/components/Navbar";
 import ProductCard from "@/components/product/ProductCard";
 
 const FavoritesCard = () => {
@@ -13,7 +12,6 @@ const FavoritesCard = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Navbar />
       <div className="max-w-6xl px-4 py-10 mx-auto">
         <div className="mb-10 text-center md:text-left">
           <h1 className="flex items-center justify-center gap-3 text-3xl font-bold text-gray-900 md:justify-start">
