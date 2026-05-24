@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer components {
+  .modal-input {
+    @apply w-full p-4 rounded-xl bg-cream-dark border border-ink/10 text-ink outline-none focus:border-gold transition-colors placeholder:text-ink/30 text-sm;
+  }
+}
 
 :root {
   --background: #ffffff;
