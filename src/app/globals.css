@@ -9,8 +9,15 @@
 }
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --gold: #b8973a;
+  --gold-light: #d4ae56;
+  --gold-pale: #e8d5a0;
+  --black: #0e0e0e;
+  --cream: #f5f2eb;
+  --cream-dark: #ede9df;
+  --ink: #1a1a18;
+  --mid: #7a7872;
+  --radius: 14px;
 }
 
 @theme inline {
@@ -27,8 +34,81 @@
   }
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family:
+    "Segoe UI",
+    system-ui,
+    -apple-system,
+    sans-serif;
+  background: var(--cream);
+  color: var(--ink);
+  overflow-x: hidden;
+}
+
+.hero-title {
+  font-family: "Cormorant Garamond", "Georgia", serif;
+  font-size: clamp(4rem, 11vw, 9rem);
+  font-weight: 300;
+  letter-spacing: 0.22em;
+  line-height: 1;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+.hero-cta {
+  margin-top: 44px;
+  display: inline-block;
+  padding: 15px 52px;
+  border-radius: 50px;
+  background: var(--ink);
+  color: var(--cream);
+  border: 1px solid var(--ink);
+  font-weight: 400;
+  font-size: 0.78rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition:
+    background 0.28s,
+    border-color 0.28s,
+    color 0.28s;
+}
+.hero-cta:hover {
+  background: var(--gold);
+  border-color: var(--gold);
+  color: #fff;
+}
+
+.scroll-hint {
+  position: absolute;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: rgba(26, 26, 24, 0.3);
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  animation: bounce 2s infinite;
+}
+.scroll-hint svg {
+  width: 20px;
+  opacity: 0.9;
+}
+@keyframes bounce {
+  0%,
+  100% {
+    transform: translateX(-50%) translateY(0);
+  }
+  50% {
+    transform: translateX(-50%) translateY(8px);
+  }
 }

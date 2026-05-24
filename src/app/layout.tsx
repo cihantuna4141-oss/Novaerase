@@ -6,14 +6,14 @@ import { Toaster } from "sonner";
 
 export const metadata: Metadata = {
   title: {
-    default: "Pen Shop –  ",
-    template: "Pen Shop - %s",
+    default: "NOVAREASE — Highlight Remover –  ",
+    template: "NOVAREASE — Highlight Remover - %s",
   },
   description:
-    "Pen Shop – Your One-Stop Destination for All Things Pen Related.",
+    "NOVAREASE — Highlight Remover – Your One-Stop Destination for All Things Pen Related.",
 
   keywords: [
-    "Pen Shop",
+    "NOVAREASE — Highlight Remover",
     "Interior Decor",
     "Design Services",
     "Furniture Works",
@@ -25,16 +25,16 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://yourdomain.com"),
 
   openGraph: {
-    title: "Pen Shop –  ",
+    title: "NOVAREASE — Highlight Remover –  ",
     description: "We Paint, We Design, We Light",
     url: "https://yourdomain.com",
-    siteName: "Pen Shop",
+    siteName: "NOVAREASE — Highlight Remover",
     images: [
       {
         url: "/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: "Pen Shop –  ",
+        alt: "NOVAREASE — Highlight Remover –  ",
       },
     ],
     locale: "en_GH",
