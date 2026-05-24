@@ -25,9 +25,7 @@ const VideoSection = () => {
           Watch the highlight disappear.
         </h2>
 
-        <div 
-          className="group relative aspect-video w-full bg-ink rounded-2xl overflow-hidden border border-gold/20 shadow-2xl transition-all duration-700"
-        >
+        <div className="group relative aspect-video w-full bg-ink rounded-2xl overflow-hidden border border-gold/20 shadow-2xl transition-all duration-700">
           {/* 1. THE VIDEO ELEMENT (Always there, muted at first) */}
           <video
             ref={videoRef}
@@ -47,7 +45,7 @@ const VideoSection = () => {
 
           {/* 2. THE INTERACTIVE OVERLAY (Visible only before clicking) */}
           {!hasStarted && (
-            <div 
+            <div
               onClick={handleStartVideo}
               className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-6 cursor-pointer"
             >
@@ -55,7 +53,7 @@ const VideoSection = () => {
               <div className="relative">
                 {/* Soft glow behind button */}
                 <div className="absolute inset-0 bg-gold/30 rounded-full blur-2xl group-hover:bg-gold/50 transition-all duration-500" />
-                
+
                 <div className="relative w-24 h-24 bg-gold/20 backdrop-blur-md border border-white/20 rounded-full flex items-center justify-center shadow-2xl group-hover:scale-110 transition-all duration-500">
                   <Play className="text-white fill-white ml-1" size={32} />
                 </div>
@@ -87,7 +85,8 @@ const VideoSection = () => {
         </div>
 
         <p className="mt-8 text-xs text-ink/40 font-medium tracking-wide">
-          *Real-time demonstration on archival 80gsm paper. Results may vary by ink type.
+          *Real-time demonstration on archival 80gsm paper. Results may vary by
+          ink type.
         </p>
       </div>
     </section>

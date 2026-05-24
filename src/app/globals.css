@@ -8,6 +8,8 @@
   }
 }
 
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&display=swap');
+
 :root {
   --gold: #b8973a;
   --gold-light: #d4ae56;
@@ -19,6 +21,19 @@
   --mid: #7a7872;
   --radius: 14px;
 }
+
+/* Tailwind extend usually handles this, but for the class used in the component: */
+.font-serif {
+  font-family: 'Cormorant Garamond', serif !important;
+}
+
+/* Smooth background transition for luxury feel */
+html {
+  scroll-behavior: smooth;
+  background-color: var(--cream);
+}
+
+
 
 @theme inline {
   --color-background: var(--background);
@@ -34,9 +49,6 @@
   }
 }
 
-html {
-  scroll-behavior: smooth;
-}
 
 body {
   font-family:
@@ -51,7 +63,7 @@ body {
 
 .hero-title {
   font-family: "Cormorant Garamond", "Georgia", serif;
-  font-size: clamp(4rem, 11vw, 9rem);
+  font-size: clamp(1rem, 11vw, 9rem);
   font-weight: 300;
   letter-spacing: 0.22em;
   line-height: 1;

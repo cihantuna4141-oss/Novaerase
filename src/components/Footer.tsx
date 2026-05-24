@@ -15,7 +15,7 @@ const Footer = ({ onOpenModal }: FooterProps) => {
           Novarease
         </span>
 
-        <div className="flex gap-8 items-center">
+        <div className="flex flex-wrap gap-4 md:gap-8 justify-center items-center">
           <button
             onClick={() => onOpenModal("contact")}
             className="text-[10px] font-semibold text-ink/60 hover:text-gold transition-colors tracking-widest uppercase"

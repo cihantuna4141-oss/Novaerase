@@ -6,19 +6,19 @@ const steps = [
   {
     num: "01",
     title: "Apply Gently",
-    desc: "Position the precision tip and glide across the highlight with minimal pressure.",
+    desc: "Press the tip lightly onto the highlighted area and glide slowly.",
     icon: <MousePointer2 className="w-5 h-5" />,
   },
   {
     num: "02",
     title: "Wait a Moment",
-    desc: "Allow 5–10 seconds for the proprietary formula to lift the pigment from the fibers.",
+    desc: "Allow 5–10 seconds for the formula to lift the ink pigment.",
     icon: <Timer className="w-5 h-5" />,
   },
   {
     num: "03",
     title: "Repeat if Needed",
-    desc: "For deep pigments, a second pass may be applied once the surface is fully dry.",
+    desc: "Allow 5–10 seconds for the formula to lift the ink pigment.",
     icon: <RotateCcw className="w-5 h-5" />,
   },
 ];
@@ -84,7 +84,7 @@ const HowTo = () => {
               </div>
 
               {/* Background Large Number (Faded) */}
-              <div className="absolute bottom-4 right-8 text-8xl font-black text-ink/[0.06] select-none pointer-events-none group-hover:text-gold/[0.05] transition-colors duration-500">
+              <div className="absolute bottom-4 right-8 text-8xl font-black text-ink/[0.04] select-none pointer-events-none group-hover:text-gold/[0.05] transition-colors duration-500">
                 {step.num}
               </div>
             </motion.div>
