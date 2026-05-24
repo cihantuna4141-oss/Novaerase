@@ -1,9 +1,17 @@
 "use client";
-import { motion, Variants } from "framer-motion"; // 1. Import the Variants type
+import { motion, Variants } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 
 const Hero = () => {
-  // 2. Explicitly type the objects as Variants
+  // Function to handle the custom scroll
+  const handleScroll = (e: React.MouseEvent) => {
+    e.preventDefault(); // Prevent default anchor jump
+    window.scrollBy({
+      top: window.innerHeight, // Scrolls down one full screen height
+      behavior: "smooth",
+    });
+  };
+
   const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
@@ -22,13 +30,13 @@ const Hero = () => {
       y: 0,
       transition: {
         duration: 0.8,
-        ease: "easeOut", // Now TypeScript knows this is a valid easing string
+        ease: "easeOut",
       },
     },
   };
 
   return (
-    <section className="relative min-h-[70vh] md:min-h-screen flex flex-col items-center justify-center text-center px-4 md:px-6 overflow-hidden bg-cream-dark">
+    <section className="relative min-h-[75vh] md:min-h-screen flex flex-col items-center justify-center text-center px-4 md:px-6 overflow-hidden bg-cream-dark">
       <div className="absolute inset-0 z-0 opacity-30 md:opacity-40 bg-[url('/hero-bg.jpg')] bg-cover bg-center" />
       <div className="absolute inset-0 z-10 bg-gradient-to-b from-cream/60 via-cream/40 to-cream/80" />
 
@@ -50,7 +58,7 @@ const Hero = () => {
           className="font-serif text-ink uppercase leading-[0.9] md:leading-[1] tracking-[0.1em] md:tracking-[0.22em] text-[clamp(2.5rem,12vw,8.5rem)]"
         >
           Novarease
-          <span className="block font-sans text-[10px] sm:text-xs md:text-base tracking-[0.3em] md:tracking-[0.5em] text-gold/80 mt-4 md:mt-6 lowercase italic md:uppercase md:not-italic">
+          <span className="block font-sans leading-4 capitalize text-[11px] sm:text-xs md:text-base tracking-[0.2em] md:tracking-[0.5em] text-gold/80 mt-4 md:mt-6  md:uppercase md:not-italic">
             Erase the unwanted, preserve the essential
           </span>
         </motion.h1>
@@ -65,30 +73,27 @@ const Hero = () => {
         </motion.p>
 
         <motion.div variants={itemVariants} className="mt-10 md:mt-14">
-          <a
-            href="#order"
+          <button
+            onClick={handleScroll}
             className="inline-block px-10 md:px-14 py-4 md:py-5 rounded-full bg-ink text-cream text-[10px] md:text-xs tracking-[0.2em] uppercase font-bold hover:bg-gold hover:text-white transition-all duration-500 shadow-xl shadow-ink/10 active:scale-95"
           >
             Order Now
-          </a>
+          </button>
         </motion.div>
       </motion.div>
 
-      <motion.div
+      {/* Centered Scroll Hint */}
+      <motion.button
+        onClick={handleScroll}
         animate={{ y: [0, 8, 0] }}
         transition={{ duration: 2, repeat: Infinity }}
-        className="absolute bottom-6 md:bottom-10 translate-x-1/2 z-20 flex flex-col items-center gap-2 text-ink/40"
+        className="absolute bottom-6 md:bottom-10  -translate-x-1/2 z-20 flex flex-col items-center gap-2 text-ink/40 cursor-pointer"
       >
         <span className="text-[9px] uppercase tracking-[0.3em] font-medium">
           Scroll
         </span>
-        <motion.div
-          animate={{ y: [0, 8, 0] }}
-          transition={{ duration: 2, repeat: Infinity }}
-        >
-          <ChevronDown size={18} strokeWidth={1.5} />
-        </motion.div>
-      </motion.div>
+        <ChevronDown size={18} strokeWidth={1.5} />
+      </motion.button>
     </section>
   );
 };
