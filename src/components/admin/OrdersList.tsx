@@ -10,18 +10,68 @@ import {
   User,
   CreditCard,
   Eraser,
+  ShoppingBag,
+  Loader2,
 } from "lucide-react";
 
 const OrdersList = () => {
-  const [orders, setOrders] = useState([]);
+  const [orders, setOrders] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true); // Track loading state
   const [selectedOrder, setSelectedOrder] = useState<any>(null);
 
   useEffect(() => {
-    fetch("/api/orders")
-      .then((r) => r.json())
-      .then((j) => setOrders(j.data));
+    const fetchOrders = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch("/api/orders");
+        const json = await response.json();
+
+        if (json && json.success && Array.isArray(json.data)) {
+          setOrders(json.data);
+        } else {
+          setOrders([]);
+        }
+      } catch (error) {
+        console.error("Fetch error:", error);
+        setOrders([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchOrders();
   }, []);
 
+  // 1. SHOW LOADING STATE
+  if (loading) {
+    return (
+      <div className="flex flex-col items-center justify-center py-32 gap-4">
+        <Loader2 className="text-gold animate-spin" size={32} />
+        <p className="text-[10px] font-bold text-gold uppercase tracking-[0.4em] animate-pulse">
+          Synchronizing Orders
+        </p>
+      </div>
+    );
+  }
+
+  // 2. SHOW EMPTY STATE
+  if (orders.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center py-32 text-center animate-in fade-in duration-700">
+        <div className="w-20 h-20 bg-white border border-gold/10 rounded-[2rem] flex items-center justify-center mb-6 shadow-sm">
+          <ShoppingBag className="text-gold/20" size={32} strokeWidth={1} />
+        </div>
+        <h3 className="font-serif text-2xl text-ink mb-2">
+          No Client Requests
+        </h3>
+        <p className="text-[10px] font-bold text-gold uppercase tracking-[0.2em] max-w-[200px] leading-relaxed">
+          The order log is currently empty.
+        </p>
+      </div>
+    );
+  }
+
+  // 3. SHOW LIST (If not loading and not empty)
   return (
     <div className="grid grid-cols-1 gap-6 pb-20 md:grid-cols-2 xl:grid-cols-3">
       {orders.map((order: any) => (
