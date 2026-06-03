@@ -3,10 +3,11 @@
 import React, { useEffect, useState } from "react";
 import { motion, Variants } from "framer-motion";
 import { ShoppingCart, Loader2 } from "lucide-react";
-import { useDispatch } from "react-redux"; 
-import { useRouter } from "next/navigation"; 
-import { CartActions } from "@/store/CartSlice"; 
-import { toast } from "sonner"; 
+import { useDispatch } from "react-redux";
+import { useRouter } from "next/navigation";
+import { CartActions } from "@/store/CartSlice";
+import { toast } from "sonner";
+import Image from "next/image";
 
 const specification = [
   {
@@ -108,35 +109,34 @@ const Specs = () => {
       className="bg-cream py-24 border-y border-ink/10 px-6 overflow-hidden"
     >
       <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
-        <div className="flex gap-6 items-end">
+        <div className="flex gap-6 items-center justify-center">
           {item1 && (
-            <motion.div
-              variants={fadeInUp}
-              className="flex-1 flex flex-col gap-4"
-            >
+            <motion.div variants={fadeInUp} className="flex flex-col gap-4 w-80">
               <div
                 // href={`/product/${item1.id}`}
-                className="group cursor-pointer aspect-[3/4] bg-cream-dark rounded-2xl overflow-hidden border-2 border-gold/20 shadow-sm relative"
+                className="group relative cursor-pointer w-80 h-96 bg-cream-dark rounded-xl overflow-hidden border-2 border-gold/20 shadow-sm"
               >
-                <img
+                <Image
                   src={item1.images[0] || "/images/nov-pen.png"}
                   alt={item1.name}
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  fill
+                  loading="lazy"
+                  className=" object-contain transition-transform duration-700 group-hover:scale-105"
                 />
               </div>
               <div className="flex flex-col group">
                 <div className="flex items-center justify-between gap-4 pb-2">
-                  <p className="text-sm font-semibold text-ink group-hover:text-gold transition-colors">
+                  <p className="text-sm font-bold text-ink group-hover:text-gold transition-colors">
                     {item1.name}
                   </p>
                   <button
                     onClick={() => handleAddToCartAndNavigate(item1)}
                     className="w-8 h-8 rounded-lg bg-gold text-white flex items-center justify-center hover:bg-ink transition-colors duration-300 active:scale-90"
                   >
-                    <ShoppingCart size={14} />
+                    <ShoppingCart size={16} />
                   </button>
                 </div>
-                <span className="text-[11px] w-full font-semibold text-gray-500 tracking-widest">
+                <span className="text-sm  font-medium text-gray-500 tracking-widest">
                   {item1.description || "Archival Kit"}
                 </span>
               </div>
@@ -144,7 +144,7 @@ const Specs = () => {
           )}
 
           {/* Dynamic Item 2 (Slot for second product - Asymmetrical Offset) */}
-          {item2 && (
+          {/* {item2 && (
             <motion.div
               variants={fadeInUp}
               className="flex-1 flex flex-col gap-4 mb-12"
@@ -176,7 +176,7 @@ const Specs = () => {
                 </span>
               </div>
             </motion.div>
-          )}
+          )} */}
         </div>
 
         {/* Specs Content */}
