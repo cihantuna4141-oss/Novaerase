@@ -12,12 +12,12 @@ export async function POST(req: NextRequest) {
     // Create Stripe line items
     const line_items = items.map((item: any) => ({
       price_data: {
-        currency: "ghs", // Novarease uses GHS
+        currency: "usd", // Novarease uses USD
         product_data: {
           name: item.name,
           images: [item.images[0]],
         },
-        unit_amount: Math.round(item.price * 100), // Stripe uses pesewas/cents
+        unit_amount: Math.round(item.price * 100), // Stripe uses cents
       },
       quantity: item.quantity,
     }));
