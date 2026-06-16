@@ -31,69 +31,68 @@ const ShopProduct = () => {
   const shippingCost = 0.0; // Complimentary
   const totalAmount = subtotal + shippingCost;
 
-const handlePlaceOrder = async (e: React.FormEvent<HTMLFormElement>) => {
-  e.preventDefault();
-  setIsProcessing(true);
+  const handlePlaceOrder = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsProcessing(true);
 
-  const form = e.currentTarget;
-  const formData = new FormData(form);
-  const customerEmail = formData.get("customerEmail") as string;
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+    const customerEmail = formData.get("customerEmail") as string;
 
-  const orderData = {
-    customerName: formData.get("customerName"),
-    customerEmail: customerEmail,
-    customerPhone: formData.get("customerPhone"),
-    houseAddress: formData.get("houseAddress"),
-    streetName: formData.get("streetName"),
-    town: formData.get("town"),
-    state: formData.get("state"),
-    zipCode: formData.get("zipCode"),
-    country: "USA",
-    subtotal: subtotal,
-    shippingCost: shippingCost,
-    totalAmount: totalAmount,
-    // THE CRITICAL MAPPING
-    items: items.map((item: any) => ({
-      productId: item.id,
-      productName: item.name,
-      productImage: item.images?.[0] || "",
-      priceAtSale: item.price,
-      quantity: item.quantity,
-      totalPrice: item.totalPrice,
-    })),
+    const orderData = {
+      customerName: formData.get("customerName"),
+      customerEmail: customerEmail,
+      customerPhone: formData.get("customerPhone"),
+      houseAddress: formData.get("houseAddress"),
+      streetName: formData.get("streetName"),
+      town: formData.get("town"),
+      state: formData.get("state"),
+      zipCode: formData.get("zipCode"),
+      country: "USA",
+      subtotal: subtotal,
+      shippingCost: shippingCost,
+      totalAmount: totalAmount,
+      // THE CRITICAL MAPPING
+      items: items.map((item: any) => ({
+        productId: item.id,
+        productName: item.name,
+        productImage: item.images?.[0] || "",
+        priceAtSale: item.price,
+        quantity: item.quantity,
+        totalPrice: item.totalPrice,
+      })),
+    };
+
+    try {
+      // 1. Create the database record
+      const dbRes = await fetch("/api/orders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(orderData),
+      });
+
+      const result = await dbRes.json();
+
+      if (!dbRes.ok) throw new Error(result.message || "DB Save Failed");
+
+      // 2. Create Stripe session using the ID from the record we just created
+      const stripeRes = await fetch("/api/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          items: items, // Pass raw items for Stripe line_items
+          orderId: result.data.id,
+          customerEmail: customerEmail,
+        }),
+      });
+
+      const session = await stripeRes.json();
+      if (session.url) window.location.href = session.url;
+    } catch (error: any) {
+      toast.error("Checkout Error", { description: error.message });
+      setIsProcessing(false);
+    }
   };
-
-  try {
-    // 1. Create the database record
-    const dbRes = await fetch("/api/orders", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(orderData),
-    });
-
-    const result = await dbRes.json();
-
-    if (!dbRes.ok) throw new Error(result.message || "DB Save Failed");
-
-    // 2. Create Stripe session using the ID from the record we just created
-    const stripeRes = await fetch("/api/checkout", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        items: items, // Pass raw items for Stripe line_items
-        orderId: result.data.id, 
-        customerEmail: customerEmail,
-      }),
-    });
-
-    const session = await stripeRes.json();
-    if (session.url) window.location.href = session.url;
-
-  } catch (error: any) {
-    toast.error("Checkout Error", { description: error.message });
-    setIsProcessing(false);
-  }
-};
 
   if (items.length === 0) {
     return (
