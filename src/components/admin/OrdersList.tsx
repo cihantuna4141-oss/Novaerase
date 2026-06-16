@@ -91,7 +91,7 @@ const OrdersList = () => {
               </h3>
               <p className="text-[10px] font-bold text-gold uppercase tracking-[0.2em] mt-1">
                 {order.items?.length || 0} Products • GH₵{" "}
-                {order.totalAmount.toFixed(2)}
+                {order.totalAmount}
               </p>
             </div>
           </div>
@@ -179,7 +179,7 @@ const OrdersList = () => {
                         {item.penName}
                       </span>
                       <span className="font-mono text-xs font-bold text-ink/40">
-                        GH₵ {item.price.toFixed(2)}
+                        GH₵ {item.price}
                       </span>
                     </div>
                   ))}
@@ -205,7 +205,7 @@ const OrdersList = () => {
                     Revenue
                   </p>
                   <p className="text-4xl font-serif italic text-gold">
-                    GH₵ {selectedOrder.totalAmount.toFixed(2)}
+                    GH₵ {selectedOrder.totalAmount}
                   </p>
                 </div>
               </div>

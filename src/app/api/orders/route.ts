@@ -1,7 +1,25 @@
-import { prisma } from "@/lib/Prismadb";
 import { NextResponse } from "next/server";
+import prisma from "@/lib/Prismadb";
 
+// 1. GET ALL ORDERS (Must be uppercase GET)
+export async function GET() {
+  try {
+    const orders = await prisma.order.findMany({
+      include: { items: true },
+      orderBy: { createdAt: "desc" },
+    });
 
+    return NextResponse.json({ success: true, data: orders }, { status: 200 });
+  } catch (error: any) {
+    console.error("Fetch Orders Error:", error);
+    return NextResponse.json(
+      { success: false, error: "Failed to fetch orders" },
+      { status: 500 }
+    );
+  }
+}
+
+// 2. CREATE NEW ORDER
 export async function POST(req: Request) {
   try {
     const body = await req.json();
@@ -19,10 +37,11 @@ export async function POST(req: Request) {
       shippingCost,
       totalAmount,
       currency,
-      items, // This is already mapped by the frontend
-    } = body; 
+      items,
+    } = body;
 
-    const orderNumber = `NM-${Date.now().toString().slice(-6)}`;
+    // Generate a unique order number
+    const orderNumber = `NVR-${Math.random().toString(36).toUpperCase().substring(2, 8)}`;
 
     const newOrder = await prisma.order.create({
       data: {
@@ -35,16 +54,16 @@ export async function POST(req: Request) {
         town,
         state,
         zipCode,
-        country,
+        country: country || "USA",
         subtotal: parseFloat(subtotal),
         shippingCost: parseFloat(shippingCost),
         totalAmount: parseFloat(totalAmount),
         currency: currency || "USD",
-        paymentStatus: "PENDING", // Should be PENDING until Stripe confirms
+        paymentStatus: "PENDING", 
         orderStatus: "PROCESSING",
         items: {
           create: items.map((item: any) => ({
-            productId: item.productId,     // Use the names sent by frontend
+            productId: item.productId,
             productName: item.productName,
             priceAtSale: parseFloat(item.priceAtSale),
             productImage: item.productImage,
@@ -60,7 +79,23 @@ export async function POST(req: Request) {
   } catch (error: any) {
     console.error("Order Creation Error:", error);
     return NextResponse.json(
-      { success: false, message: error.message || "Failed to create order" },
+      { success: false, message: error.message },
+      { status: 500 }
+    );
+  }
+}
+
+// 3. DELETE ALL ORDERS
+export async function DELETE() {
+  try {
+    const result = await prisma.order.deleteMany({});
+    return NextResponse.json(
+      { success: true, message: `Deleted ${result.count} orders` },
+      { status: 200 }
+    );
+  } catch (error: any) {
+    return NextResponse.json(
+      { success: false, error: error.message },
       { status: 500 }
     );
   }
