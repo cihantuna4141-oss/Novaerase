@@ -5,22 +5,25 @@ import prisma from "@/lib/Prismadb";
 export async function GET() {
   try {
     const orders = await prisma.order.findMany({
-      include: { items: true }, // Include nested items (with images)
+      include: { items: true }, 
       orderBy: { createdAt: "desc" },
     });
-    return NextResponse.json(orders, { status: 200 });
+    // Wrapping in success/data for frontend consistency
+    return NextResponse.json({ success: true, data: orders }, { status: 200 });
   } catch (error) {
     return NextResponse.json(
-      { error: "Failed to fetch orders" },
+      { success: false, error: "Failed to fetch orders" },
       { status: 500 },
     );
   }
 }
 
-// 2. CREATE NEW ORDER (Manual Entry)
+// 2. CREATE NEW ORDER
 export async function POST(req: Request) {
   try {
     const body = await req.json();
+    
+    // Destructure everything sent from the ShopProduct component
     const {
       customerName,
       customerEmail,
@@ -35,15 +38,13 @@ export async function POST(req: Request) {
       shippingCost,
       totalAmount,
       currency,
-      paymentReference,
-      paymentStatus, // Allow manual setting of status (e.g. PAID)
-      items, // Expecting an array of items with images
+      paymentStatus,
+      items, 
     } = body;
 
-    // Generate a unique order number if not provided
-    const orderNumber = `PMH-${Date.now().toString().slice(-6)}`;
+    // Generate order number
+    const orderNumber = `NVR-${Math.random().toString(36).toUpperCase().substring(2, 8)}`;
 
-    // Use Prisma Transaction to ensure data integrity
     const newOrder = await prisma.order.create({
       data: {
         orderNumber,
@@ -55,20 +56,20 @@ export async function POST(req: Request) {
         town,
         state,
         zipCode,
-        country,
+        country: country || "USA",
         subtotal: parseFloat(subtotal),
         shippingCost: parseFloat(shippingCost),
         totalAmount: parseFloat(totalAmount),
-        currency: currency || "GHS",
-        paymentReference,
-        paymentStatus: paymentStatus || "PENDING", 
-        // Nested creation of OrderItems
+        currency: currency || "USD",
+        paymentStatus: paymentStatus || "PENDING",
+        orderStatus: "PROCESSING",
+        // MAPPING TO MATCH FRONTEND KEYS EXACTLY
         items: {
           create: items.map((item: any) => ({
-            productId: item.id,
-            productName: item.name,
-            priceAtSale: parseFloat(item.price),
-            productImage: item.image, // <--- SAVING IMAGE URL
+            productId: item.productId,     // Matches ShopProduct mapping
+            productName: item.productName, // Matches ShopProduct mapping
+            priceAtSale: parseFloat(item.priceAtSale),
+            productImage: item.productImage,
             quantity: parseInt(item.quantity),
             totalPrice: parseFloat(item.totalPrice),
           })),
@@ -77,33 +78,31 @@ export async function POST(req: Request) {
       include: { items: true },
     });
 
-    return NextResponse.json(newOrder, { status: 201 });
-  } catch (error) {
-    console.error("Order Creation Error:", error);
+    return NextResponse.json({ success: true, data: newOrder }, { status: 201 });
+  } catch (error: any) {
+    // This will now log the specific Prisma missing argument if it happens again
+    console.error("PRISMA POST ERROR:", error);
     return NextResponse.json(
-      { error: "Failed to create order" },
+      { success: false, message: error.message || "Failed to create order" },
       { status: 500 },
     );
   }
 }
 
-// 3. DELETE ALL ORDERS (Dangerous!)
+// 3. DELETE ALL ORDERS
 export async function DELETE() {
   try {
-    // Delete all OrderItems first (due to foreign key constraints, though Cascade should handle it)
-    await prisma.orderItem.deleteMany({});
-    
-    // Delete all Orders
+    // OrderItem has onDelete: Cascade in your schema, so deleting order deletes items
     const result = await prisma.order.deleteMany({});
 
     return NextResponse.json(
-      { message: `Deleted ${result.count} orders successfully` },
+      { success: true, message: `Deleted ${result.count} orders successfully` },
       { status: 200 }
     );
   } catch (error) {
     console.error("Delete All Error:", error);
     return NextResponse.json(
-      { error: "Failed to delete all orders" },
+      { success: false, error: "Failed to delete all orders" },
       { status: 500 }
     );
   }

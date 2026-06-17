@@ -21,36 +21,35 @@ export async function GET(req: NextRequest, context: RouteContext) {
 
     return NextResponse.json(order, { status: 200 });
   } catch (error) {
-    return NextResponse.json({ error: "Error fetching order" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Error fetching order" },
+      { status: 500 },
+    );
   }
 }
 
-// 2. UPDATE ORDER (e.g., updating Status)
-export async function PATCH(request: NextRequest, context: RouteContext) {
+export async function PATCH(
+  req: Request,
+  { params }: { params: { id: string } },
+) {
   try {
-    const { id } = await context.params;
-    const { orderStatus } = await request.json();
-
-    if (!id) {
-      return NextResponse.json({ error: "Order ID is required" }, { status: 400 });
-    }
+    const body = await req.json();
+    const { orderStatus, paymentStatus } = body; // Accept paymentStatus too
 
     const updatedOrder = await prisma.order.update({
-      where: { id },
-      data: { orderStatus },
+      where: { id: params.id },
+      data: {
+        orderStatus: orderStatus || undefined,
+        paymentStatus: paymentStatus || undefined, // Allow manual override
+      },
     });
 
-    // Send professional status email to customer
-    try {
-      await sendStatusEmail(updatedOrder, orderStatus);
-    } catch (emailErr) {
-      console.error("Email Notification Failed:", emailErr);
-    }
-
-    return NextResponse.json(updatedOrder);
-  } catch (error) {
-    console.error("PATCH_ORDER_ERROR:", error);
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+    return NextResponse.json({ success: true, data: updatedOrder });
+  } catch (error: any) {
+    return NextResponse.json(
+      { success: false, error: error.message },
+      { status: 500 },
+    );
   }
 }
 
@@ -63,7 +62,10 @@ export async function DELETE(req: NextRequest, context: RouteContext) {
       where: { id },
     });
 
-    return NextResponse.json({ message: "Order record archived" }, { status: 200 });
+    return NextResponse.json(
+      { message: "Order record archived" },
+      { status: 200 },
+    );
   } catch (error) {
     return NextResponse.json({ error: "Delete failed" }, { status: 500 });
   }
