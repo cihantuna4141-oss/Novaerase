@@ -134,7 +134,7 @@ const OrdersList = () => {
       <div className="flex flex-col items-center justify-center py-40 gap-4 bg-[#F5F2EB]">
         <Loader2 className="text-gold animate-spin" size={32} />
         <p className="text-[10px] font-bold text-gold uppercase tracking-[0.4em] animate-pulse">
-          Accessing Archives
+          Accessing Orders
         </p>
       </div>
     );
@@ -150,7 +150,7 @@ const OrdersList = () => {
             </p>
             <h1 className="font-serif text-5xl md:text-6xl text-ink italic">
               Order{" "}
-              <span className="font-sans not-italic font-light">Manifest</span>
+              <span className="font-sans not-italic font-light">Requests</span>
             </h1>
           </div>
 
