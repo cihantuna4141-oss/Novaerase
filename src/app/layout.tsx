@@ -1,8 +1,16 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import AuthProvider from "@/contexts/AuthProvider";
 import ToastContext from "@/contexts/ToastContexts";
 import { Toaster } from "sonner";
+
+
+export const viewport: Viewport = {
+  themeColor: "#000000",
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+};
 
 export const metadata: Metadata = {
   title: {
@@ -13,21 +21,31 @@ export const metadata: Metadata = {
     "NOVAREASE — Highlight Remover – Your One-Stop Destination for All Things Pen Related.",
 
   keywords: [
-    "NOVAREASE — Highlight Remover",
-    "Interior Decor",
-    "Design Services",
-    "Furniture Works",
-    "Professional Painting",
-    "Pop Designs",
-    "Lighting Solutions",
+    "highlighter remover pen",
+    "remove highlighter from books",
+    "highlight remover for textbooks",
+    "paper safe highlighter remover",
+    "highlighter eraser pen",
+    "non-damaging highlight remover",
+    "student highlight remover",
+    "study book highlighter remover",
+    "NOVAREASE highlight remover",
+    "best highlighter remover pen"
   ],
 
-  metadataBase: new URL("https://yourdomain.com"),
+  metadataBase: new URL("https://novarease.com"),
+
+  alternates: {
+    canonical: "https://novarease.com",
+    languages: {
+      "en-US": "https://novarease.com",
+    },
+  },
 
   openGraph: {
     title: "NOVAREASE — Highlight Remover –  ",
-    description: "We Paint, We Design, We Light",
-    url: "https://yourdomain.com",
+    description: "We Erase, We Clean, We Restore.",
+    url: "https://novarease.com",
     siteName: "NOVAREASE — Highlight Remover",
     images: [
       {
@@ -37,8 +55,12 @@ export const metadata: Metadata = {
         alt: "NOVAREASE — Highlight Remover –  ",
       },
     ],
-    locale: "en_GH",
+    locale: "en_US",
     type: "website",
+  },
+  robots: {
+    index: true,
+    follow: true,
   },
 };
 

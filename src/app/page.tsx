@@ -2,9 +2,9 @@ import Main from "@/components/Main";
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: "Home",
+  title: "NOVAREASE – Highlighter Remover Pen",
   description:
-    "Pen Shop – Your One-Stop Destination for All Things Pen Related.",
+    "NOVAREASE is a precision highlighter remover pen designed to safely erase highlighter marks from books, textbooks, and documents without damaging paper.",
 }
 
 export default function Home() {
