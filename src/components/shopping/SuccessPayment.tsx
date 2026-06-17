@@ -62,14 +62,14 @@ const SuccessContent = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#F5F2EB] flex items-center justify-center p-6">
-      <div className="max-w-xl w-full bg-white border border-gold/10 p-12 rounded-[3rem] shadow-2xl shadow-gold/5 text-center">
+    <div className="min-h-screen bg-white flex items-center justify-center p-6">
+      <div className="max-w-xl w-full  border-2 border-gold/30 p-12 rounded-lg shadow-2xl shadow-gold/5 text-center">
         <div className="w-24 h-24 bg-gold/10 rounded-[2rem] flex items-center justify-center mx-auto mb-8 shadow-inner">
           <CheckCircle2 className="text-gold" size={48} strokeWidth={1.5} />
         </div>
 
         <h1 className="font-serif text-4xl text-ink mb-4 uppercase tracking-tight">
-          Curation Confirmed
+          Order Confirmed
         </h1>
         <p className="text-sm text-ink/40 font-medium tracking-wide mb-10 leading-relaxed">
           Your payment has been successfully encrypted and processed. Your Order
