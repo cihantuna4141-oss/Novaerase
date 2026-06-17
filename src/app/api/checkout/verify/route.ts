@@ -3,7 +3,7 @@ import Stripe from "stripe";
 import prisma from "@/lib/Prismadb";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2026-05-27.dahlia" as any, 
+  apiVersion: "2026-05-27.dahlia" as any,
 });
 
 export async function GET(req: NextRequest) {
@@ -29,12 +29,16 @@ export async function GET(req: NextRequest) {
             paymentStatus: "PAID",
             paymentReference: session.id,
           },
+          include: { items: true }, // ADD THIS LINE
         });
         return NextResponse.json({ success: true, order: updatedOrder });
       }
     }
 
-    return NextResponse.json({ success: false, message: "Payment not verified" });
+    return NextResponse.json({
+      success: false,
+      message: "Payment not verified",
+    });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }

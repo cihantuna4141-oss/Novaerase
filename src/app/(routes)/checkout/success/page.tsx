@@ -1,6 +1,6 @@
-import MakePayment from '@/components/shopping/MakePayment'
 import React from 'react'
 import { Metadata } from 'next'
+import SuccessPayment from '@/components/shopping/SuccessPayment'
 
 export const metadata: Metadata = {
   title: "Checkout Success",
@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 const Success = () => {
   return (
     <div>
-        <MakePayment />
+        <SuccessPayment />
     </div>
   )
 }
