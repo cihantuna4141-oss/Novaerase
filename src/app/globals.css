@@ -139,3 +139,18 @@ body {
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: #b8973a; /* Solid Gold */
 }
+
+.custom-luxury-select .ant-select-selector {
+  border-radius: 12px !important;
+  border-color: rgba(184, 151, 58, 0.2) !important;
+  background-color: white !important;
+  height: 48px !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+.custom-luxury-select .ant-select-selection-item {
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.1em !important;
+}
