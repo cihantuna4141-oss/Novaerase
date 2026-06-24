@@ -14,22 +14,22 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   title: {
-    default: "NOVAREASE — Highlight Remover –  ",
-    template: "NOVAREASE — Highlight Remover - %s",
+    default: "NOVAREASE — Yellow Highlight Remover –  ",
+    template: "NOVAREASE — Yellow Highlight Remover - %s",
   },
   description:
-    "NOVAREASE — Highlight Remover – Your One-Stop Destination for All Things Pen Related.",
+    "NOVAREASE — Yellow Highlight Remover – Your One-Stop Destination for All Things Pen Related.",
 
   keywords: [
     "yellow highlighter remover pen",
     "remove highlighter from books",
-    "highlight remover for textbooks",
+    "yellow highlight remover for textbooks",
     "paper safe yellow highlighter remover",
     "highlighter eraser pen",
-    "non-damaging highlight remover",
-    "student highlight remover",
+    "non-damaging yellow highlight remover",
+    "student yellow highlight remover",
     "study book yellow highlighter remover",
-    "NOVAREASE highlight remover",
+    "NOVAREASE yellow highlight remover",
     "best yellow highlighter remover pen"
   ],
 
@@ -43,16 +43,16 @@ export const metadata: Metadata = {
   },
 
   openGraph: {
-    title: "NOVAREASE — Highlight Remover –  ",
+    title: "NOVAREASE — Yellow Highlight Remover –  ",
     description: "We Erase, We Clean, We Restore.",
     url: "https://novarease.com",
-    siteName: "NOVAREASE — Highlight Remover",
+    siteName: "NOVAREASE — Yellow Highlight Remover",
     images: [
       {
         url: "/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: "NOVAREASE — Highlight Remover –  ",
+        alt: "NOVAREASE — Yellow Highlight Remover –  ",
       },
     ],
     locale: "en_US",
