@@ -21,16 +21,16 @@ export const metadata: Metadata = {
     "NOVAREASE — Highlight Remover – Your One-Stop Destination for All Things Pen Related.",
 
   keywords: [
-    "highlighter remover pen",
+    "yellow highlighter remover pen",
     "remove highlighter from books",
     "highlight remover for textbooks",
-    "paper safe highlighter remover",
+    "paper safe yellow highlighter remover",
     "highlighter eraser pen",
     "non-damaging highlight remover",
     "student highlight remover",
-    "study book highlighter remover",
+    "study book yellow highlighter remover",
     "NOVAREASE highlight remover",
-    "best highlighter remover pen"
+    "best yellow highlighter remover pen"
   ],
 
   metadataBase: new URL("https://novarease.com"),

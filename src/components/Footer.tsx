@@ -44,7 +44,7 @@ const Footer = ({ onOpenModal }: FooterProps) => {
         </div>
 
         <p className="text-[11px] text-ink/70 tracking-wider">
-          © {year} Novarease by Armas. All rights reserved.
+          © {year} Novarease by Arvantis. All rights reserved.
         </p>
       </div>
     </footer>

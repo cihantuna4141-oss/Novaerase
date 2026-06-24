@@ -50,7 +50,7 @@ const Hero = () => {
           variants={itemVariants}
           className="text-[9px] md:text-[11px] tracking-[0.3em] md:tracking-[0.4em] text-gold uppercase mb-4 md:mb-6 font-bold"
         >
-          by Armas — Precision Highlight Removal
+          by Arvantis — Precision Highlight Removal
         </motion.p>
 
         <motion.h1

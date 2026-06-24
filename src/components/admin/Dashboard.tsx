@@ -104,7 +104,7 @@ export default function NovareaseDashboard() {
             </div>
             <div>
               <p className="text-xs font-bold text-ink tracking-wide">
-                Armas Admin
+                Arvantis Admin
               </p>
               <p className="text-[10px] text-ink/40">Superuser</p>
             </div>
