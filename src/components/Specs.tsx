@@ -32,8 +32,8 @@ const specification = [
   },
   {
     icon: "◇",
-    title: "2.5 ml — Premium Box",
-    desc: "Includes user guide and before/after reference card.",
+    title: "Made specifically for yellow highlighters.",
+    desc: "",
   },
 ];
 
@@ -207,9 +207,11 @@ const Specs = () => {
                   <h4 className="text-sm font-semibold text-ink mb-1 tracking-wide">
                     {spec.title}
                   </h4>
-                  <p className="text-xs text-ink/60 leading-relaxed">
-                    {spec.desc}
-                  </p>
+                  {spec.desc && (
+                    <p className="text-xs text-ink/60 leading-relaxed">
+                      {spec.desc}
+                    </p>
+                  )}
                 </div>
               </motion.div>
             ))}
