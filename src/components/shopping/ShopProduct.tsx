@@ -19,6 +19,18 @@ import Link from "next/link";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
+const US_STATES = [
+  "Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado",
+  "Connecticut", "Delaware", "Florida", "Georgia", "Hawaii", "Idaho",
+  "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana",
+  "Maine", "Maryland", "Massachusetts", "Michigan", "Minnesota", "Mississippi",
+  "Missouri", "Montana", "Nebraska", "Nevada", "New Hampshire", "New Jersey",
+  "New Mexico", "New York", "North Carolina", "North Dakota", "Ohio", "Oklahoma",
+  "Oregon", "Pennsylvania", "Rhode Island", "South Carolina", "South Dakota",
+  "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington",
+  "West Virginia", "Wisconsin", "Wyoming",
+];
+
 const ShopProduct = () => {
   const { items } = useSelector((state: RootState) => state.cart);
   const dispatch = useDispatch();
@@ -214,12 +226,17 @@ const ShopProduct = () => {
                     <label className="text-[10px] font-bold text-gold uppercase tracking-widest ml-1">
                       State
                     </label>
-                    <input
+                    <select
                       name="state"
                       required
-                      placeholder="NEW YORK"
+                      defaultValue=""
                       className="w-full p-3 bg-cream/20 border-2 border-gold/20 rounded-lg outline-none focus:ring-1 focus:ring-gold/40 text-base font-medium uppercase"
-                    />
+                    >
+                      <option value="" disabled>Select state</option>
+                      {US_STATES.map((s) => (
+                        <option key={s} value={s}>{s}</option>
+                      ))}
+                    </select>
                   </div>
                   <div className="space-y-2">
                     <label className="text-[10px] font-bold text-gold uppercase tracking-widest ml-1">

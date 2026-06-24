@@ -2,9 +2,25 @@
 
 import { motion, Variants } from "framer-motion";
 import { ShieldCheck, Truck, RotateCcw } from "lucide-react";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 const OrderCTA = () => {
+  const [price, setPrice] = useState<number | null>(null);
+
+  useEffect(() => {
+    fetch("/api/pens")
+      .then((r) => r.json())
+      .then((json) => {
+        if (json.success && json.data.length > 0) {
+          setPrice(json.data[0].price);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  const originalPrice = price !== null ? (price * 2).toFixed(2) : null;
+  const currentPrice = price !== null ? price.toFixed(2) : null;
+
   // Logic to scroll up by 2 pages
   const handleScrollUp = () => {
     window.scrollBy({
@@ -71,11 +87,13 @@ const OrderCTA = () => {
         </motion.h2>
 
         <motion.div variants={itemVariants} className="mt-10 relative inline-block">
-          <p className="text-2xl md:text-3xl font-serif text-ink/40 tracking-tighter line-through">
-            $29.99
-          </p>
+          {originalPrice && (
+            <p className="text-2xl md:text-3xl font-serif text-ink/40 tracking-tighter line-through">
+              ${originalPrice}
+            </p>
+          )}
           <p className="text-6xl md:text-8xl font-serif text-ink tracking-tighter">
-            $14.99
+            {currentPrice ? `$${currentPrice}` : "$—"}
           </p>
           <p className="text-sm font-semibold text-ink/60 uppercase tracking-widest mt-1">
             Only for a limited time.
