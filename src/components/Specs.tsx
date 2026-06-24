@@ -136,9 +136,11 @@ const Specs = () => {
                     <ShoppingCart size={16} />
                   </button>
                 </div>
-                <span className="text-sm  font-medium text-gray-500 tracking-widest">
-                  {item1.description || "Archival Kit"}
-                </span>
+                {item1.description && (
+                  <span className="text-sm font-medium text-gray-500 tracking-widest">
+                    {item1.description}
+                  </span>
+                )}
               </div>
             </motion.div>
           )}
@@ -172,7 +174,7 @@ const Specs = () => {
                   </button>
                 </div>
                 <span className="text-[11px] w-full font-semibold text-gray-500 tracking-widest">
-                  {item2.description || "Archival Kit"}
+                  {item2.description || ""}
                 </span>
               </div>
             </motion.div>
