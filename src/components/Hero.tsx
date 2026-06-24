@@ -67,7 +67,7 @@ const Hero = () => {
           variants={itemVariants}
           className="mt-8 md:mt-10 text-xs sm:text-sm md:text-base text-ink/60 tracking-wide font-light max-w-[280px] sm:max-w-md mx-auto leading-relaxed"
         >
-          Remove Highlights Cleanly & Instantly.{" "}
+          Remove Yellow Highlights Cleanly & Instantly.{" "}
           <br className="hidden sm:block" />
           No damage • Dries quickly • Safe for all paper types.
         </motion.p>
