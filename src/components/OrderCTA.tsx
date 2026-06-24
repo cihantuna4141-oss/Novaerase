@@ -71,8 +71,14 @@ const OrderCTA = () => {
         </motion.h2>
 
         <motion.div variants={itemVariants} className="mt-10 relative inline-block">
+          <p className="text-2xl md:text-3xl font-serif text-ink/40 tracking-tighter line-through">
+            $29.99
+          </p>
           <p className="text-6xl md:text-8xl font-serif text-ink tracking-tighter">
             $14.99
+          </p>
+          <p className="text-sm font-semibold text-ink/60 uppercase tracking-widest mt-1">
+            Only for a limited time.
           </p>
           <div className="absolute -inset-4 bg-gold/5 blur-3xl -z-10 rounded-full" />
         </motion.div>

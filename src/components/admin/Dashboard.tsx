@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { signOut } from "next-auth/react";
 import {
   ShoppingBag,
   Layers,
@@ -108,7 +109,10 @@ export default function NovareaseDashboard() {
               <p className="text-[10px] text-ink/40">Superuser</p>
             </div>
           </div>
-          <button className="flex items-center  gap-3 text-[11px] font-bold tracking-widest text-red-500 uppercase transition hover:text-blue-500">
+          <button
+            onClick={() => signOut({ callbackUrl: "/admin-dashboard/signin" })}
+            className="flex items-center gap-3 text-[11px] font-bold tracking-widest text-red-500 uppercase transition hover:text-red-700"
+          >
             <LogOut size={16} /> Logout
           </button>
         </div>

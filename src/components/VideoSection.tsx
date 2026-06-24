@@ -31,7 +31,6 @@ const VideoSection = () => {
           <video
             ref={videoRef}
             className={`block max-w-full h-auto mx-auto transition-opacity duration-700 ${hasStarted ? "opacity-100" : "opacity-50"}`}
-            autoPlay
             muted
             loop
             playsInline
