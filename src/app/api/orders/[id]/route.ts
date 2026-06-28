@@ -34,13 +34,15 @@ export async function PATCH(
 ) {
   try {
     const body = await req.json();
-    const { orderStatus, paymentStatus } = body; // Accept paymentStatus too
+    const { orderStatus, paymentStatus, trackingNumber, shippingCarrier } = body;
 
     const updatedOrder = await prisma.order.update({
       where: { id: params.id },
       data: {
         orderStatus: orderStatus || undefined,
-        paymentStatus: paymentStatus || undefined, // Allow manual override
+        paymentStatus: paymentStatus || undefined,
+        trackingNumber: trackingNumber ?? undefined,
+        shippingCarrier: shippingCarrier ?? undefined,
       },
     });
 

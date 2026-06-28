@@ -12,6 +12,7 @@ import {
   Hash,
   Loader2,
   ShoppingBag,
+  Truck,
 } from "lucide-react";
 import Image from "next/image";
 
@@ -22,19 +23,17 @@ const STATUS_THEMES: Record<
   string,
   { label: string; color: string; icon: any; bg: string }
 > = {
-  PROCESSING: {
-    label: "Processing",
-    color: "#B8973A",
-    icon: Clock,
-    bg: "bg-gold/5",
-  },
-  DELIVERED: {
-    label: "Delivered",
-    color: "#059669",
-    icon: CheckCircle,
-    bg: "bg-emerald-50",
-  },
-  CANCELLED: { label: "Voided", color: "#dc2626", icon: X, bg: "bg-red-50" },
+  PROCESSING: { label: "Processing", color: "#B8973A", icon: Clock,         bg: "bg-gold/5" },
+  SHIPPED:    { label: "Shipped",    color: "#2563eb", icon: Truck,         bg: "bg-blue-50" },
+  DELIVERED:  { label: "Delivered",  color: "#059669", icon: CheckCircle,   bg: "bg-emerald-50" },
+  CANCELLED:  { label: "Voided",     color: "#dc2626", icon: X,             bg: "bg-red-50" },
+};
+
+const CARRIER_URLS: Record<string, (n: string) => string> = {
+  UPS:   (n) => `https://www.ups.com/track?tracknum=${n}`,
+  FedEx: (n) => `https://www.fedex.com/fedextrack/?trknbr=${n}`,
+  USPS:  (n) => `https://tools.usps.com/go/TrackConfirmAction?tLabels=${n}`,
+  DHL:   (n) => `https://www.dhl.com/en/express/tracking.html?AWB=${n}`,
 };
 
 const OrdersList = () => {
@@ -42,6 +41,8 @@ const OrdersList = () => {
   const [loading, setLoading] = useState(true);
   const [selectedOrder, setSelectedOrder] = useState<any | null>(null);
   const [tempStatus, setTempStatus] = useState<string>("");
+  const [tempTracking, setTempTracking] = useState("");
+  const [tempCarrier, setTempCarrier] = useState("UPS");
   const [isUpdating, setIsUpdating] = useState(false);
   const [activeFilter, setActiveFilter] = useState("ALL");
   const [expandedDate, setExpandedDate] = useState<string | null>(null);
@@ -81,26 +82,38 @@ const OrdersList = () => {
   const handleOpenOrder = (order: any) => {
     setSelectedOrder(order);
     setTempStatus(order.orderStatus);
+    setTempTracking(order.trackingNumber || "");
+    setTempCarrier(order.shippingCarrier || "UPS");
   };
 
   const handleSaveStatus = async () => {
     if (!selectedOrder || !tempStatus) return;
+    if (tempStatus === "SHIPPED" && !tempTracking.trim()) {
+      message.warning("Please enter a tracking number before marking as Shipped.");
+      return;
+    }
     setIsUpdating(true);
     try {
       const res = await fetch(`/api/orders/${selectedOrder.id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ orderStatus: tempStatus }),
+        body: JSON.stringify({
+          orderStatus: tempStatus,
+          trackingNumber: tempStatus === "SHIPPED" ? tempTracking.trim() : undefined,
+          shippingCarrier: tempStatus === "SHIPPED" ? tempCarrier : undefined,
+        }),
       });
 
       if (res.ok) {
-        setOrders((prev) =>
-          prev.map((o) =>
-            o.id === selectedOrder.id ? { ...o, orderStatus: tempStatus } : o,
-          ),
-        );
-        setSelectedOrder((prev: any) => ({ ...prev, orderStatus: tempStatus }));
-        message.success("Archive Entry Updated");
+        const updated = {
+          ...selectedOrder,
+          orderStatus: tempStatus,
+          trackingNumber: tempStatus === "SHIPPED" ? tempTracking.trim() : selectedOrder.trackingNumber,
+          shippingCarrier: tempStatus === "SHIPPED" ? tempCarrier : selectedOrder.shippingCarrier,
+        };
+        setOrders((prev) => prev.map((o) => o.id === selectedOrder.id ? updated : o));
+        setSelectedOrder(updated);
+        message.success("Order updated");
       }
     } catch (e) {
       message.error("Sync Error");
@@ -155,7 +168,7 @@ const OrdersList = () => {
           </div>
 
           <div className="flex gap-2 bg-white/50 p-1.5 rounded-full border-2 border-gold/10 backdrop-blur-sm">
-            {["ALL", "PROCESSING", "DELIVERED"].map((f) => (
+            {["ALL", "PROCESSING", "SHIPPED", "DELIVERED"].map((f) => (
               <button
                 key={f}
                 onClick={() => setActiveFilter(f)}
@@ -285,24 +298,20 @@ const OrdersList = () => {
 
             <div className="flex-grow p-8 space-y-8 overflow-y-auto">
               {/* Lifecycle Control */}
-              {/* Lifecycle Control */}
-              <div className="bg-white p-6 rounded-lg border-2 border-gold/20 shadow-sm flex items-center justify-between">
-                <Select
-                  value={tempStatus}
-                  className="w-48 h-12 custom-luxury-select"
-                  onChange={setTempStatus}
-                  // DISABLE if the actual order status in the database is already DELIVERED
-                  disabled={
-                    selectedOrder.orderStatus === "DELIVERED" || isUpdating
-                  }
-                >
-                  <Option value="PROCESSING">PROCESSING</Option>
-                  <Option value="DELIVERED">DELIVERED</Option>
-                </Select>
+              <div className="bg-white p-6 rounded-lg border-2 border-gold/20 shadow-sm space-y-4">
+                <div className="flex items-center justify-between">
+                  <Select
+                    value={tempStatus}
+                    className="w-48 h-12 custom-luxury-select"
+                    onChange={setTempStatus}
+                    disabled={selectedOrder.orderStatus === "DELIVERED" || isUpdating}
+                  >
+                    <Option value="PROCESSING">PROCESSING</Option>
+                    <Option value="SHIPPED">SHIPPED</Option>
+                    <Option value="DELIVERED">DELIVERED</Option>
+                  </Select>
 
-                {/* Only show the update button if the status is different AND not already delivered */}
-                {tempStatus !== selectedOrder.orderStatus &&
-                  selectedOrder.orderStatus !== "DELIVERED" && (
+                  {tempStatus !== selectedOrder.orderStatus && selectedOrder.orderStatus !== "DELIVERED" && (
                     <button
                       onClick={handleSaveStatus}
                       className="bg-ink text-gold px-8 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-gold hover:text-ink transition-all"
@@ -311,10 +320,49 @@ const OrdersList = () => {
                     </button>
                   )}
 
-                {/* Optional: Show a "Completed" badge if locked */}
-                {selectedOrder.orderStatus === "DELIVERED" && (
-                  <div className="flex items-center gap-2 text-emerald-600 text-[10px] font-bold uppercase tracking-widest">
-                    <CheckCircle size={14} /> Order Finalized
+                  {selectedOrder.orderStatus === "DELIVERED" && (
+                    <div className="flex items-center gap-2 text-emerald-600 text-[10px] font-bold uppercase tracking-widest">
+                      <CheckCircle size={14} /> Order Finalized
+                    </div>
+                  )}
+                </div>
+
+                {/* Tracking fields — shown when SHIPPED is selected */}
+                {tempStatus === "SHIPPED" && selectedOrder.orderStatus !== "DELIVERED" && (
+                  <div className="space-y-3 pt-2 border-t border-gold/10">
+                    <p className="text-[10px] font-bold text-gold uppercase tracking-widest">Tracking Info</p>
+                    <Select
+                      value={tempCarrier}
+                      className="w-full h-10"
+                      onChange={setTempCarrier}
+                    >
+                      {["UPS", "FedEx", "USPS", "DHL"].map((c) => (
+                        <Option key={c} value={c}>{c}</Option>
+                      ))}
+                    </Select>
+                    <input
+                      type="text"
+                      placeholder="Tracking number"
+                      value={tempTracking}
+                      onChange={(e) => setTempTracking(e.target.value)}
+                      className="w-full border-2 border-gold/20 rounded-lg px-4 py-2.5 text-sm font-medium outline-none focus:border-gold/50 bg-cream/30"
+                    />
+                  </div>
+                )}
+
+                {/* Show existing tracking info if already shipped */}
+                {selectedOrder.trackingNumber && selectedOrder.orderStatus !== "PROCESSING" && (
+                  <div className="pt-2 border-t border-gold/10 space-y-1">
+                    <p className="text-[10px] font-bold text-gold uppercase tracking-widest">Current Tracking</p>
+                    <p className="text-xs font-bold text-ink">{selectedOrder.shippingCarrier}: {selectedOrder.trackingNumber}</p>
+                    <a
+                      href={CARRIER_URLS[selectedOrder.shippingCarrier]?.(selectedOrder.trackingNumber) ?? "#"}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-[10px] text-blue-600 underline font-semibold"
+                    >
+                      View on {selectedOrder.shippingCarrier} →
+                    </a>
                   </div>
                 )}
               </div>

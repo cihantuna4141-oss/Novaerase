@@ -64,6 +64,8 @@ model Order {
   paymentStatus         String      @default("PENDING") // PENDING, PAID, FAILED
   paymentReference      String?     @unique             // From Paystack
   orderStatus           String      @default("PROCESSING") // PROCESSING, SHIPPED, DELIVERED, CANCELLED
+  trackingNumber        String?
+  shippingCarrier       String?
   
   items                 OrderItem[]
   

@@ -11,10 +11,17 @@ import VideoSection from "./VideoSection";
 import { Loader2, PackageCheck, Truck, Clock, XCircle } from "lucide-react";
 
 const STATUS_CONFIG: Record<string, { label: string; color: string; icon: React.ReactNode }> = {
-  PROCESSING: { label: "Processing", color: "text-amber-600 bg-amber-50", icon: <Clock size={16} /> },
-  SHIPPED:    { label: "Shipped",    color: "text-blue-600 bg-blue-50",   icon: <Truck size={16} /> },
+  PROCESSING: { label: "Processing", color: "text-amber-600 bg-amber-50",     icon: <Clock size={16} /> },
+  SHIPPED:    { label: "Shipped",    color: "text-blue-600 bg-blue-50",       icon: <Truck size={16} /> },
   DELIVERED:  { label: "Delivered",  color: "text-emerald-600 bg-emerald-50", icon: <PackageCheck size={16} /> },
-  CANCELLED:  { label: "Cancelled",  color: "text-red-500 bg-red-50",    icon: <XCircle size={16} /> },
+  CANCELLED:  { label: "Cancelled",  color: "text-red-500 bg-red-50",         icon: <XCircle size={16} /> },
+};
+
+const CARRIER_TRACKING_URLS: Record<string, (n: string) => string> = {
+  UPS:   (n) => `https://www.ups.com/track?tracknum=${n}`,
+  FedEx: (n) => `https://www.fedex.com/fedextrack/?trknbr=${n}`,
+  USPS:  (n) => `https://tools.usps.com/go/TrackConfirmAction?tLabels=${n}`,
+  DHL:   (n) => `https://www.dhl.com/en/express/tracking.html?AWB=${n}`,
 };
 
 const Main = () => {
@@ -127,6 +134,22 @@ const Main = () => {
               <span className="font-bold text-ink uppercase tracking-widest text-[10px]">Total</span>
               <span className="font-bold text-ink">${trackedOrder.totalAmount.toFixed(2)}</span>
             </div>
+
+            {/* Tracking Number */}
+            {trackedOrder.trackingNumber && (
+              <div className="bg-blue-50 rounded-xl p-4 space-y-2">
+                <p className="text-[10px] text-blue-600 uppercase tracking-widest font-bold">Tracking</p>
+                <p className="text-sm font-bold text-ink">{trackedOrder.shippingCarrier}: {trackedOrder.trackingNumber}</p>
+                <a
+                  href={CARRIER_TRACKING_URLS[trackedOrder.shippingCarrier]?.(trackedOrder.trackingNumber) ?? "#"}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-block text-xs font-bold text-blue-600 underline"
+                >
+                  Track on {trackedOrder.shippingCarrier} →
+                </a>
+              </div>
+            )}
 
             {/* Shipping */}
             <div className="bg-ink/5 rounded-xl p-4 space-y-1">
