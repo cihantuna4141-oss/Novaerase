@@ -1,6 +1,6 @@
 import { NextResponse, NextRequest } from "next/server";
 import { prisma } from "@/lib/Prismadb";
-import { sendStatusEmail } from "@/lib/Mail";
+import { sendShippedEmail, sendDeliveredEmail } from "@/lib/emails";
 
 type RouteContext = {
   params: Promise<{ id: string }>;
@@ -44,7 +44,28 @@ export async function PATCH(
         trackingNumber: trackingNumber ?? undefined,
         shippingCarrier: shippingCarrier ?? undefined,
       },
+      include: { items: true },
     });
+
+    if (orderStatus === "SHIPPED" && updatedOrder.trackingNumber && updatedOrder.shippingCarrier) {
+      await sendShippedEmail({
+        customerName: updatedOrder.customerName,
+        customerEmail: updatedOrder.customerEmail,
+        orderNumber: updatedOrder.orderNumber,
+        trackingNumber: updatedOrder.trackingNumber,
+        shippingCarrier: updatedOrder.shippingCarrier,
+        items: updatedOrder.items,
+      });
+    }
+
+    if (orderStatus === "DELIVERED") {
+      await sendDeliveredEmail({
+        customerName: updatedOrder.customerName,
+        customerEmail: updatedOrder.customerEmail,
+        orderNumber: updatedOrder.orderNumber,
+        items: updatedOrder.items,
+      });
+    }
 
     return NextResponse.json({ success: true, data: updatedOrder });
   } catch (error: any) {
