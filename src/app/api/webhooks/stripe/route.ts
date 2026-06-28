@@ -50,7 +50,7 @@ export async function POST(req: NextRequest) {
         )
         .join("");
 
-      await resend.emails.send({
+      const { data: emailData, error: emailError } = await resend.emails.send({
         from: "Novarease <orders@novarease.com>",
         to: [order.customerEmail],
         subject: `Order Confirmed — ${order.orderNumber}`,
@@ -108,6 +108,12 @@ export async function POST(req: NextRequest) {
           </div>
         `,
       });
+
+      if (emailError) {
+        console.error("RESEND ERROR:", JSON.stringify(emailError));
+      } else {
+        console.log("Email sent successfully:", emailData?.id);
+      }
     }
   }
 
