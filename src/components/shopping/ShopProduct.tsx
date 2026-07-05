@@ -40,7 +40,7 @@ const ShopProduct = () => {
   const [paymentMethod, setPaymentMethod] = useState<"card" | "momo">("card");
 
   const subtotal = items.reduce((acc, item) => acc + item.totalPrice, 0);
-  const shippingCost = 0.0; // Complimentary
+  const shippingCost = 4.0;
   const totalAmount = subtotal + shippingCost;
 
   const handlePlaceOrder = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -345,8 +345,10 @@ const ShopProduct = () => {
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span>Logistics</span>
-                  <span className="text-gold">Complimentary</span>
+                  <span>Shipping</span>
+                  <span className="text-white italic font-serif text-base tracking-normal">
+                    $4.00
+                  </span>
                 </div>
                 <div className="flex justify-between pt-10 mt-6 text-2xl font-serif italic text-gold border-t border-white/10">
                   <span className="text-[11px] font-black not-italic tracking-[0.5em] text-white">

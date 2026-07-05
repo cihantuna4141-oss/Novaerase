@@ -98,6 +98,9 @@ const OrderCTA = () => {
           <p className="text-sm font-semibold text-ink/60 uppercase tracking-widest mt-1">
             Only for a limited time.
           </p>
+          <p className="text-xs font-medium text-ink/40 mt-2">
+            + shipping fee
+          </p>
           <div className="absolute -inset-4 bg-gold/5 blur-3xl -z-10 rounded-full" />
         </motion.div>
 
@@ -105,7 +108,7 @@ const OrderCTA = () => {
           variants={itemVariants}
           className="mt-6 text-[11px] font-semibold text-ink/40 uppercase tracking-[0.2em]"
         >
-          Free shipping on orders over $30 • 30-day satisfaction guarantee
+          30-day satisfaction guarantee
         </motion.p>
 
         <motion.div
