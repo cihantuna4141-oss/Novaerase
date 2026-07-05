@@ -24,7 +24,9 @@ const CartItems = () => {
   const dispatch = useDispatch();
   const router = useRouter();
 
-  const totalPrice = items.reduce((acc, item) => acc + item.totalPrice, 0);
+  const subtotal = items.reduce((acc, item) => acc + item.totalPrice, 0);
+  const shippingCost = 4.0;
+  const totalPrice = subtotal + shippingCost;
 
   if (items.length === 0) {
     return (
@@ -146,19 +148,19 @@ const CartItems = () => {
                 <div className="flex justify-between text-[11px] font-bold uppercase tracking-widest text-cream/70">
                   <span>Subtotal</span>
                   <span className="text-cream italic font-serif text-sm">
-                    $ {totalPrice ? totalPrice.toFixed(2) : "0.00"}
+                    $ {subtotal.toFixed(2)}
                   </span>
                 </div>
                 <div className="flex justify-between text-[11px] font-bold uppercase tracking-widest text-cream/70">
                   <span>Shipping</span>
-                  <span className="text-gold">Complimentary</span>
+                  <span className="text-cream italic font-serif text-sm">$ 4.00</span>
                 </div>
                 <div className="pt-6 border-t border-white/10 flex justify-between items-baseline">
                   <span className="text-[11px] font-bold uppercase tracking-[0.3em]">
                     Total
                   </span>
                   <span className="text-2xl font-serif italic text-gold">
-                    $ {totalPrice ? totalPrice.toFixed(2) : "0.00"}
+                    $ {totalPrice.toFixed(2)}
                   </span>
                 </div>
               </div>
