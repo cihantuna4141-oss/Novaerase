@@ -26,11 +26,21 @@ const CARRIER_TRACKING_URLS: Record<string, (n: string) => string> = {
 
 const Main = () => {
   const [modalType, setModalType] = useState<"track" | "contact" | null>(null);
+
+  // Track order state
   const [orderNumber, setOrderNumber] = useState("");
   const [email, setEmail] = useState("");
   const [trackLoading, setTrackLoading] = useState(false);
   const [trackError, setTrackError] = useState("");
   const [trackedOrder, setTrackedOrder] = useState<any>(null);
+
+  // Contact form state
+  const [contactName, setContactName] = useState("");
+  const [contactEmail, setContactEmail] = useState("");
+  const [contactMessage, setContactMessage] = useState("");
+  const [contactLoading, setContactLoading] = useState(false);
+  const [contactError, setContactError] = useState("");
+  const [contactSent, setContactSent] = useState(false);
 
   const handleTrack = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -58,6 +68,35 @@ const Main = () => {
   };
 
   const status = trackedOrder ? (STATUS_CONFIG[trackedOrder.orderStatus] ?? STATUS_CONFIG.PROCESSING) : null;
+
+  const handleContact = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setContactError("");
+    setContactLoading(true);
+
+    const res = await fetch("/api/contact", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name: contactName, email: contactEmail, message: contactMessage }),
+    });
+    const json = await res.json();
+    setContactLoading(false);
+
+    if (!res.ok) {
+      setContactError(json.error || "Failed to send message. Please try again.");
+    } else {
+      setContactSent(true);
+    }
+  };
+
+  const handleContactClose = () => {
+    setModalType(null);
+    setContactName("");
+    setContactEmail("");
+    setContactMessage("");
+    setContactError("");
+    setContactSent(false);
+  };
 
   return (
     <main className="bg-cream text-ink antialiased selection:bg-gold/30">
@@ -172,15 +211,58 @@ const Main = () => {
 
       <Modal
         isOpen={modalType === "contact"}
-        onClose={() => setModalType(null)}
+        onClose={handleContactClose}
         title="Get in Touch"
       >
-        <input type="text" placeholder="Name" className="modal-input" />
-        <input type="email" placeholder="Email" className="modal-input" />
-        <textarea placeholder="Message" className="modal-input min-h-[100px]" />
-        <button className="w-full bg-ink text-cream py-4 rounded-xl font-bold mt-4">
-          Send Message
-        </button>
+        {contactSent ? (
+          <div className="text-center space-y-4 py-6">
+            <p className="text-4xl">✓</p>
+            <p className="font-bold text-ink text-lg">Message sent!</p>
+            <p className="text-sm text-ink/50">We'll get back to you at {contactEmail} as soon as possible.</p>
+            <button
+              onClick={handleContactClose}
+              className="w-full bg-ink text-cream py-4 rounded-xl font-bold mt-2"
+            >
+              Close
+            </button>
+          </div>
+        ) : (
+          <form onSubmit={handleContact} className="space-y-4">
+            <input
+              type="text"
+              placeholder="Name"
+              value={contactName}
+              onChange={(e) => setContactName(e.target.value)}
+              required
+              className="modal-input"
+            />
+            <input
+              type="email"
+              placeholder="Email"
+              value={contactEmail}
+              onChange={(e) => setContactEmail(e.target.value)}
+              required
+              className="modal-input"
+            />
+            <textarea
+              placeholder="Message"
+              value={contactMessage}
+              onChange={(e) => setContactMessage(e.target.value)}
+              required
+              className="modal-input min-h-[100px]"
+            />
+            {contactError && (
+              <p className="text-xs text-red-500 font-semibold">{contactError}</p>
+            )}
+            <button
+              type="submit"
+              disabled={contactLoading}
+              className="w-full bg-ink text-cream py-4 rounded-xl font-bold mt-4 flex items-center justify-center gap-2 disabled:opacity-50"
+            >
+              {contactLoading ? <><Loader2 size={16} className="animate-spin" /> Sending...</> : "Send Message"}
+            </button>
+          </form>
+        )}
       </Modal>
     </main>
   );
