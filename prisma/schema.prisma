@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -19,13 +13,13 @@ model Admin {
   lastName          String
   email             String    @unique
   phoneNumber       String    @unique
-  password          String    
+  password          String
   passwordChanged   Boolean   @default(false)
   verificationCode  String?
   codeExpires       DateTime?
   role              String    @default("ADMIN")
   createdAt         DateTime  @default(now())
-  updatedAt         DateTime    @updatedAt
+  updatedAt         DateTime  @updatedAt
 }
 
 model Product {
@@ -35,40 +29,39 @@ model Product {
   price                  Float
   images                 String[]
 
-  orderItems             OrderItem[] 
-
+  orderItems             OrderItem[]
 }
 
 model Order {
   id                    String      @id @default(uuid())
-  orderNumber           String      @unique 
+  orderNumber           String      @unique
   customerName          String
   customerEmail         String
   customerPhone         String
-  
+
   // Shipping Address Details
   houseAddress          String
   streetName            String
   town                  String
   state                 String?
   zipCode               String
-  country               String?     
-  
+  country               String?
+
   // Financials
   subtotal              Float
   shippingCost          Float
   totalAmount           Float
   currency              String      @default("GHS")
-  
+
   // Payment & Status
-  paymentStatus         String      @default("PENDING") // PENDING, PAID, FAILED
-  paymentReference      String?     @unique             // From Paystack
-  orderStatus           String      @default("PROCESSING") // PROCESSING, SHIPPED, DELIVERED, CANCELLED
+  paymentStatus         String      @default("PENDING")
+  paymentReference      String?     @unique
+  orderStatus           String      @default("PROCESSING")
   trackingNumber        String?
   shippingCarrier       String?
-  
+
   items                 OrderItem[]
-  
+
   createdAt             DateTime    @default(now())
   updatedAt             DateTime    @updatedAt
 }
@@ -78,10 +71,10 @@ model OrderItem {
   orderId                 String
   productId               String
   productName             String
-  productImage            String?  
+  productImage            String?
   priceAtSale             Float
   quantity                Int
-  totalPrice              Float   
+  totalPrice              Float
 
   order                   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
   product                 Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
