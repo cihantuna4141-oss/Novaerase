@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 import prisma from "@/lib/Prismadb";
-import { sendOrderConfirmation } from "@/lib/emails";
+import { sendOrderConfirmation, sendAdminOrderNotification } from "@/lib/emails";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: "2026-05-27.dahlia" as any,
@@ -38,6 +38,10 @@ export async function POST(req: NextRequest) {
       });
 
       await sendOrderConfirmation(order);
+      await sendAdminOrderNotification({
+        ...order,
+        totalAmount: order.totalAmount.toFixed(2),
+      });
     }
   }
 

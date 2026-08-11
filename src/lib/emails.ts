@@ -190,3 +190,98 @@ export async function sendDeliveredEmail(order: {
   if (error) console.error("RESEND sendDeliveredEmail ERROR:", JSON.stringify(error));
   else console.log("Delivered email sent:", order.orderNumber);
 }
+
+// ── 4. ADMIN ORDER NOTIFICATION ───────────────────────────────────────────────
+
+export async function sendAdminOrderNotification(order: {
+  customerName: string;
+  customerEmail: string;
+  customerPhone: string;
+  orderNumber: string;
+  totalAmount: string;
+  streetName: string;
+  houseAddress?: string | null;
+  town: string;
+  state?: string | null;
+  zipCode: string;
+  items: { productName: string; quantity: number; totalPrice: number }[];
+}) {
+  const rows = order.items
+    .map(
+      (item) =>
+        `<tr>
+          <td style="padding:10px 0;border-bottom:1px solid #E8E3D8;font-family:sans-serif;font-size:14px;color:#1A1A18;">${item.productName}</td>
+          <td style="padding:10px 0;border-bottom:1px solid #E8E3D8;text-align:center;font-family:sans-serif;font-size:14px;color:#1A1A18;">${item.quantity}</td>
+          <td style="padding:10px 0;border-bottom:1px solid #E8E3D8;text-align:right;font-family:sans-serif;font-size:14px;color:#1A1A18;">$${item.totalPrice.toFixed(2)}</td>
+        </tr>`
+    )
+    .join("");
+
+  const html = `
+    <div style="background:#1A1A18;padding:40px 20px;font-family:Georgia,serif;">
+      <div style="max-width:580px;margin:0 auto;background:#fff;border-radius:8px;overflow:hidden;">
+
+        <div style="background:#B8973A;padding:24px 32px;display:flex;align-items:center;justify-content:space-between;">
+          <div>
+            <p style="font-family:sans-serif;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#1A1A18;margin:0 0 4px;font-weight:bold;">New Order Received</p>
+            <p style="font-family:sans-serif;font-size:20px;font-weight:bold;color:#1A1A18;margin:0;">${order.orderNumber}</p>
+          </div>
+          <div style="background:#1A1A18;color:#B8973A;padding:8px 16px;border-radius:20px;font-family:sans-serif;font-size:11px;font-weight:bold;letter-spacing:2px;text-transform:uppercase;">
+            PAID
+          </div>
+        </div>
+
+        <div style="padding:32px;">
+
+          <div style="display:flex;gap:16px;margin-bottom:24px;">
+            <div style="flex:1;background:#F5F2EB;border-radius:6px;padding:16px;">
+              <p style="font-family:sans-serif;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:#B8973A;margin:0 0 6px;font-weight:bold;">Customer</p>
+              <p style="font-family:sans-serif;font-size:13px;font-weight:bold;color:#1A1A18;margin:0;">${order.customerName}</p>
+              <p style="font-family:sans-serif;font-size:12px;color:#555;margin:4px 0 0;">${order.customerEmail}</p>
+              <p style="font-family:sans-serif;font-size:12px;color:#555;margin:2px 0 0;">${order.customerPhone}</p>
+            </div>
+            <div style="flex:1;background:#F5F2EB;border-radius:6px;padding:16px;">
+              <p style="font-family:sans-serif;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:#B8973A;margin:0 0 6px;font-weight:bold;">Ship To</p>
+              <p style="font-family:sans-serif;font-size:13px;color:#1A1A18;margin:0;line-height:1.7;">
+                ${order.streetName}${order.houseAddress ? ", " + order.houseAddress : ""}<br/>
+                ${order.town}, ${order.state ?? ""} ${order.zipCode}
+              </p>
+            </div>
+          </div>
+
+          <table style="width:100%;border-collapse:collapse;">
+            <thead>
+              <tr>
+                <th style="font-family:sans-serif;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#B8973A;text-align:left;padding-bottom:8px;border-bottom:2px solid #1A1A18;">Item</th>
+                <th style="font-family:sans-serif;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#B8973A;text-align:center;padding-bottom:8px;border-bottom:2px solid #1A1A18;">Qty</th>
+                <th style="font-family:sans-serif;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#B8973A;text-align:right;padding-bottom:8px;border-bottom:2px solid #1A1A18;">Price</th>
+              </tr>
+            </thead>
+            <tbody>${rows}</tbody>
+          </table>
+
+          <div style="text-align:right;margin-top:20px;padding-top:16px;border-top:2px solid #1A1A18;">
+            <p style="font-family:sans-serif;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#999;margin:0 0 4px;">Total Collected</p>
+            <p style="font-size:28px;color:#1A1A18;margin:0;font-weight:bold;">$${order.totalAmount}</p>
+          </div>
+
+        </div>
+
+        <div style="background:#1A1A18;padding:16px 32px;text-align:center;">
+          <p style="font-family:sans-serif;font-size:10px;color:#555;margin:0;">Go to your admin dashboard to update this order's status.</p>
+        </div>
+
+      </div>
+    </div>
+  `;
+
+  const { error } = await resend.emails.send({
+    from: FROM,
+    to: ["support@novarease.com"],
+    subject: `[New Order] ${order.orderNumber} — $${order.totalAmount}`,
+    html,
+  });
+
+  if (error) console.error("RESEND sendAdminOrderNotification ERROR:", JSON.stringify(error));
+  else console.log("Admin notification sent for:", order.orderNumber);
+}
