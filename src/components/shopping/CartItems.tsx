@@ -17,12 +17,22 @@ import { CartActions } from "@/store/CartSlice";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
+const PROVEN_HIGHLIGHTERS = [
+  "Sharpie Tank Guard",
+  "Office Depot Yellow Highlighter",
+  "Sharpie Retractable",
+  "Bic Brite Liner",
+  "Amazon Basics",
+  "Pen Gear Pocket Highlighters",
+];
+
 const CartItems = () => {
   const { items, totalQuantity } = useSelector(
     (state: RootState) => state.cart,
   );
   const dispatch = useDispatch();
   const router = useRouter();
+  const [showWarning, setShowWarning] = React.useState(false);
 
   const subtotal = items.reduce((acc, item) => acc + item.totalPrice, 0);
   const shippingCost = 4.0;
@@ -166,7 +176,7 @@ const CartItems = () => {
               </div>
 
               <button
-                onClick={() => router.push("/checkout")}
+                onClick={() => setShowWarning(true)}
                 className="relative z-10 flex items-center justify-center w-full gap-3 py-3.5 text-[11px] font-black tracking-[0.25em] text-ink uppercase transition-all bg-gold rounded-2xl hover:bg-white hover:text-ink active:scale-95 shadow-lg shadow-gold/20"
               >
                 Proceed to Checkout <ArrowRight size={16} />
@@ -179,6 +189,63 @@ const CartItems = () => {
           </div>
         </div>
       </div>
+
+      {/* Compatibility Warning Modal */}
+      {showWarning && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink/60 backdrop-blur-sm">
+          <div className="bg-[#F5F2EB] rounded-2xl max-w-md w-full shadow-2xl overflow-hidden">
+            {/* Header */}
+            <div className="bg-ink px-8 py-6">
+              <p className="text-[9px] font-bold text-gold uppercase tracking-[0.3em] mb-1">Important Notice</p>
+              <h2 className="font-serif text-xl text-cream">Before You Continue</h2>
+            </div>
+
+            {/* Body */}
+            <div className="px-8 py-6 space-y-5">
+              <p className="text-sm text-ink/70 leading-relaxed font-light">
+                Dear customer, our remover has been tested on many common yellow highlighters
+                in the market. However, <span className="font-semibold text-ink">effectiveness will vary
+                with the chemical composition of the highlighter ink.</span>
+              </p>
+
+              <div className="bg-white border border-gold/20 rounded-xl p-5">
+                <p className="text-[10px] font-bold text-gold uppercase tracking-widest mb-3">
+                  Proven to remove
+                </p>
+                <ul className="space-y-2">
+                  {PROVEN_HIGHLIGHTERS.map((name) => (
+                    <li key={name} className="flex items-center gap-2 text-sm text-ink font-medium">
+                      <span className="text-gold text-xs">✓</span>
+                      {name}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <p className="text-[11px] text-ink/50 leading-relaxed">
+                Results may differ for highlighters not listed above. If you are unsure,
+                test on a small area before full use.
+              </p>
+            </div>
+
+            {/* Actions */}
+            <div className="px-8 pb-8 flex flex-col gap-3">
+              <button
+                onClick={() => { setShowWarning(false); router.push("/checkout"); }}
+                className="w-full bg-ink text-cream py-4 rounded-xl font-black text-[11px] tracking-[0.3em] uppercase hover:bg-gold transition-colors"
+              >
+                I Understand — Proceed
+              </button>
+              <button
+                onClick={() => setShowWarning(false)}
+                className="w-full border border-ink/20 text-ink/60 py-3 rounded-xl font-bold text-[11px] tracking-widest uppercase hover:bg-ink/5 transition-colors"
+              >
+                Go Back
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
