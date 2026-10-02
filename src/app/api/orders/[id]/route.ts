@@ -1,6 +1,7 @@
 import { NextResponse, NextRequest } from "next/server";
 import { prisma } from "@/lib/Prismadb";
 import { sendShippedEmail, sendDeliveredEmail } from "@/lib/emails";
+import { requireAdmin } from "@/lib/requireAdmin";
 
 type RouteContext = {
   params: Promise<{ id: string }>;
@@ -32,6 +33,9 @@ export async function PATCH(
   req: Request,
   { params }: { params: { id: string } },
 ) {
+  const unauthorized = await requireAdmin();
+  if (unauthorized) return unauthorized;
+
   try {
     const body = await req.json();
     const { orderStatus, paymentStatus, trackingNumber, shippingCarrier } = body;
@@ -78,6 +82,9 @@ export async function PATCH(
 
 // 3. DELETE ORDER
 export async function DELETE(req: NextRequest, context: RouteContext) {
+  const unauthorized = await requireAdmin();
+  if (unauthorized) return unauthorized;
+
   try {
     const { id } = await context.params;
 

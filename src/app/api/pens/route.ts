@@ -7,6 +7,7 @@ import { Readable } from "stream";
 import type { IncomingMessage } from "http";
 import { Storage } from "@google-cloud/storage";
 import path from "path";
+import { requireAdmin } from "@/lib/requireAdmin";
 
 // 1. HELPER: Convert NextRequest to Node.js IncomingMessage for Formidable
 const toIncomingMessage = async (req: NextRequest): Promise<IncomingMessage> => {
@@ -89,6 +90,9 @@ export async function GET() {
 
 // POST: Create a product with Image Upload
 export async function POST(req: NextRequest) {
+  const unauthorized = await requireAdmin();
+  if (unauthorized) return unauthorized;
+
   try {
     const { fields, files } = await parseFormData(req);
 
@@ -138,8 +142,10 @@ export async function POST(req: NextRequest) {
 
 // DELETE ALL
 export async function DELETE() {
+    const unauthorized = await requireAdmin();
+    if (unauthorized) return unauthorized;
+
     try {
-      await prisma.product.deleteMany();
       await prisma.product.deleteMany();
       return NextResponse.json({ message: "All products deleted" });
     } catch (error: any) {

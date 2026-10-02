@@ -1,8 +1,12 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/Prismadb";
+import { requireAdmin } from "@/lib/requireAdmin";
 
 // 1. GET ALL ORDERS (Must be uppercase GET)
 export async function GET() {
+  const unauthorized = await requireAdmin();
+  if (unauthorized) return unauthorized;
+
   try {
     const orders = await prisma.order.findMany({
       include: { items: true },
@@ -87,6 +91,9 @@ export async function POST(req: Request) {
 
 // 3. DELETE ALL ORDERS
 export async function DELETE() {
+  const unauthorized = await requireAdmin();
+  if (unauthorized) return unauthorized;
+
   try {
     const result = await prisma.order.deleteMany({});
     return NextResponse.json(

@@ -13,11 +13,10 @@ const Receipt = () => {
   const receiptRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    fetch(`/api/orders`)
+    fetch(`/api/orders/${orderId}`)
       .then((res) => res.json())
       .then((json) => {
-        const found = json.data.find((o: any) => o.id === orderId);
-        setOrder(found);
+        setOrder(json);
       });
   }, [orderId]);
 

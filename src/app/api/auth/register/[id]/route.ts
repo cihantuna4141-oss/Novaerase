@@ -1,6 +1,7 @@
 import { NextResponse, NextRequest } from "next/server";
 import prisma from "@/lib/Prismadb"; // Using the singleton instance
 import bcrypt from "bcryptjs";
+import { requireAdmin } from "@/lib/requireAdmin";
 
 // Helper function to verify the Secret Key
 const verifySecret = (req: Request) => {
@@ -20,13 +21,12 @@ export async function GET(
   req: NextRequest,
   context: RouteContext
 ) {
+  const unauthorized = await requireAdmin();
+  if (unauthorized) return unauthorized;
+
   try {
     // 1. Await params in Next.js 15
     const { id } = await context.params;
-
-    // if (!verifySecret(req)) {
-    //   return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    // }
 
     const admin = await prisma.admin.findUnique({
       where: { id },
@@ -59,14 +59,12 @@ export async function DELETE(
   req: NextRequest,
   context: RouteContext
 ) {
+  const unauthorized = await requireAdmin();
+  if (unauthorized) return unauthorized;
+
   try {
     // 1. Await params in Next.js 15
     const { id } = await context.params;
-
-    // Uncomment if you want to protect delete with secret key
-    // if (!verifySecret(req)) {
-    //   return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    // }
 
     await prisma.admin.delete({
       where: { id },
